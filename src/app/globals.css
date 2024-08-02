@@ -1,0 +1,18 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+:root {
+    --mainbg: #E5E5E5;
+    --orange: #FB8500;
+    --light-orange: #FFB703;
+    --white: #FFFFFF;
+    --black: #000000;
+    --dark-green: #023047;
+    --green: #219EBC;
+    --light-green: #8ECAE6;
+}
