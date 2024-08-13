@@ -1,5 +1,5 @@
 import Image from "next/image"
-import logo from '../../public/logo.png'
+import logo from '../../public/logo-dark.png'
 import Link from "next/link"
 export default function login() {
     return (
@@ -64,12 +64,12 @@ export default function login() {
 
                 <p className="mt-10 text-center text-sm text-gray-500">
                     Not a member?{' '}
-                    <Link href="/signup" className="font-semibold leading-6 text-green hover:text-green">
+                    <Link href="/signup" className="font-semibold leading-6 text-green hover:text-dark-green">
                         Sign up!
                     </Link>
                 </p>
             </div>
-            <Link href="/" className="text-center mt-8 font-semibold leading-6 text-green hover:text-green">
+            <Link href="/" className="text-center mt-8 font-semibold leading-6 text-green hover:text-dark-green">
                 Home
             </Link>
         </div>

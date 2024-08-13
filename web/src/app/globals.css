@@ -7,11 +7,33 @@
 @import 'tailwindcss/utilities';
 
 :root {
-    --mainbg: #E5E5E5;
+    --background: #ffffff;
+    --text: #000000;
+    --border: #FB8500;
     --orange: #FB8500;
     --light-orange: #FFB703;
-    --white: #FFFFFF;
-    --black: #000000;
+    --dark-green: #023047;
+    --green: #219EBC;
+    --light-green: #8ECAE6;
+}
+
+.dark {
+    --background: #1d1d1d;
+    --text: #e4e4e4;
+    --border: #FB8500;
+    --orange: #FB8500;
+    --light-orange: #FFB703;
+    --dark-green: #023047;
+    --green: #219EBC;
+    --light-green: #8ECAE6;
+}
+
+.light {
+    --background: #ffffff;
+    --text: #000000;
+    --border: #FB8500;
+    --orange: #FB8500;
+    --light-orange: #FFB703;
     --dark-green: #023047;
     --green: #219EBC;
     --light-green: #8ECAE6;

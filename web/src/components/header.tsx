@@ -1,11 +1,16 @@
 import Link from "next/link";
+import logo from '../public/logo-white.png';
+import Image from "next/image";
 export default function Header() {
     return (
-        <div className="min-h-full w-full border-b-2 flex flex-1 justify-center items-center p-3">
-            <h1 className="flex flex-1 ml-4 justify-center">My One Mile</h1>
-            <div className="flex flex space-x-4">
-                <Link className="bg-white text-orange underline d-flex rounded px-4 py-2 hover:bg-orange hover:text-white" href="/login">Login</Link>
-                <Link className="bg-white text-orange underline d-flex rounded px-4 py-2 hover:bg-orange hover:text-white" href="/signup">Sign Up</Link>
+        <div className="w-full border-b-2 flex flex-1 justify-between items-center p-3 bg-orange">
+            <div className="inline-flex justify-center items-center">
+                <span className="mx-2"><Image src={logo} alt="my-one-mile-logo" className="mx-auto h-12 w-auto" /></span>
+                <span>My One Mile</span>
+            </div>
+            <div className="">
+                <Link className="text-background underline d-flex rounded px-4 py-3 hover:bg-white" href="/login">Login</Link>
+                <Link className="text-background underline d-flex rounded px-4 py-3 hover:bg-white" href="/signup">Sign Up</Link>
             </div>
         </div>
     );
