@@ -1,9 +1,41 @@
+'use client'
+import React from "react";
 import Image from "next/image"
 import logo from '../../public/logo-dark.png'
 import Link from "next/link"
-export default function login() {
+import { useRouter } from "next/navigation";
+
+export default function Login() {
+    const router = useRouter();
+    const [isLoading, setIsLoading] = React.useState(false);
+
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        setIsLoading(true);
+        const formData = new FormData(e.currentTarget);
+        const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(Object.fromEntries(formData)),
+        });
+        setIsLoading(false);
+        if (res.ok) {
+            const response = await res.json();
+            console.log("Response");
+            console.log(response[0]);
+            localStorage.setItem("user", JSON.stringify(response[0]));
+            alert("successfully logged in");
+            router.push('/');
+        } else {
+            alert(await res.text());
+        }
+    }
+
     return (
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+            {isLoading && <div className="text-center text-3xl">Loading...</div>}
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <Image src={logo} alt="my-one-mile-logo" className="mx-auto h-12 w-auto"></Image>
                 <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
@@ -12,7 +44,7 @@ export default function login() {
             </div>
 
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                <form action="#" method="POST" className="space-y-6">
+                <form action="#" onSubmit={handleSubmit} method="POST" className="space-y-6">
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                             Email address

@@ -1,12 +1,12 @@
 import { Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes } from 'sequelize';
 import { db as sequelize } from '../dbConfig/server';
-import { v4 as uuidv4 } from 'uuid';
 
 interface UserModel extends Model<InferAttributes<UserModel>, InferCreationAttributes<UserModel>> {
     id: string;
     name: CreationOptional<string>;
     email: string;
     password: string;
+    role_id: number;
 }
 
 export const User = sequelize.define<UserModel>('User', {
@@ -22,10 +22,23 @@ export const User = sequelize.define<UserModel>('User', {
     },
     password: {
         type: DataTypes.STRING,
+    },
+    role_id: {
+        type: DataTypes.NUMBER,
     }
 }, {
     tableName: 'users',
-    createdAt: false,
+    createdAt: true,
     updatedAt: false,
-    timestamps: false
 });
+
+export interface UserType {
+    id: string;
+    name: string | null;
+    email: string;
+    password: string;
+    createdAt: Date;
+    location: string | null;
+    dob: Date | null;
+    role_id: number;
+}
