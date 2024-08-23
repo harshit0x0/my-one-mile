@@ -42,9 +42,9 @@ export default function Header() {
                 </div>
             }
             {
-                isLoggedIn && <div>
+                isLoggedIn && user && <div>
                     <div className="">
-                        <Link className="text-background underline d-flex rounded px-4 py-3 hover:bg-white" href="/dashboard">{user.name ? user.name : user.email}</Link>
+                        <Link className="text-background underline d-flex rounded px-4 py-3 hover:bg-white" href="/profile">{user.name ? user.name : user.email}</Link>
                     </div>
                     <div>
                         <Link className="text-background underline d-flex rounded px-4 py-3 hover:bg-white" href="#" onClick={handleLogout}>Logout</Link>

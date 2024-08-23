@@ -7,6 +7,7 @@ interface UserModel extends Model<InferAttributes<UserModel>, InferCreationAttri
     email: string;
     password: string;
     role_id: number;
+    dob: Date | null;
 }
 
 export const User = sequelize.define<UserModel>('User', {
@@ -25,6 +26,9 @@ export const User = sequelize.define<UserModel>('User', {
     },
     role_id: {
         type: DataTypes.NUMBER,
+    },
+    dob: {
+        type: DataTypes.DATE,
     }
 }, {
     tableName: 'users',
