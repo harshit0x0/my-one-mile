@@ -15,3 +15,4 @@ export async function encryptPassword(password: string): Promise<string> {
 export async function matchPassword(password: string, hashedPassword: string): Promise<boolean> {
     return await bcrypt.compare(password, hashedPassword);
 }
+
