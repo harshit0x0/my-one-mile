@@ -21,15 +21,11 @@ export default function Login() {
             body: JSON.stringify(Object.fromEntries(formData)),
         });
         setIsLoading(false);
-        if (res.ok) {
-            const response = await res.json();
-            console.log("Response");
-            console.log(response[0]);
-            localStorage.setItem("user", JSON.stringify(response[0]));
+
+        if (!res.ok) { alert(await res.text()); }
+        else {
             alert("successfully logged in");
-            router.push('/');
-        } else {
-            alert(await res.text());
+            router.push('/')
         }
     }
 

@@ -3,10 +3,11 @@ import Image from "next/image";
 import profileIcon from "../../public/profile-icon.png";
 import { useState, FormEvent } from "react";
 import { UserType } from "@/src/models/users";
+import { useRouter } from "next/navigation";
 
 export default function ProfileForm({ user }: { user: UserType }) {
     const [loading, setLoading] = useState(false);
-
+    const router = useRouter();
     async function handleFormSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
@@ -15,11 +16,7 @@ export default function ProfileForm({ user }: { user: UserType }) {
         if (file) {
             formData.append('file', file);
         }
-        const data = localStorage.getItem('user');
-        const user = JSON.parse(data ?? "");
-        for (const entry of formData.entries()) {
-            console.log(entry);
-        }
+        formData.append('id', user.id);
         setLoading(true);
         console.log(formData);
         const res = await fetch('/api/profile', {
@@ -28,9 +25,8 @@ export default function ProfileForm({ user }: { user: UserType }) {
         })
         setLoading(false);
         if (res.ok) {
-            const user = await res.json();
-            localStorage.setItem('user', JSON.stringify(user));
             alert("Profile updated successfully");
+            router.refresh();
         } else {
             alert("Failed to update profile");
         }

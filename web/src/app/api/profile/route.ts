@@ -4,6 +4,8 @@ import { Image } from '@/src/models/images';
 import { Location } from '@/src/models/location';
 import { v2 as cloudinary } from 'cloudinary';
 import { Readable } from 'stream';
+import { signUser } from '@/src/auth/authUser';
+import { cookies } from 'next/headers';
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -54,25 +56,25 @@ export async function POST(request: NextRequest) {
         }
 
         const dataToUpdate: any = {};
+
         for (const entry of data.entries()) {
             const [key, value] = entry;
+            if (key == 'file') continue;            //we dont need this entry
             if (value) {
-                if (key == 'location') {
-                    const { State: stateCode, City }: any = value;
-
-
-                }
-                else { dataToUpdate[key] = value; }
+                dataToUpdate[key] = value;
             }
         }
+        // console.log("data to update: ", dataToUpdate);
         await User.update(
             dataToUpdate,
             { where: { id: data.get('id') as string } }
         );
 
-        //return updated user
+        // create new token for updated user
         const user = await User.findByPk(data.get('id') as string);
-        return new NextResponse(JSON.stringify(user), { status: 200 });
+        const token = await signUser(user?.dataValues);
+        cookies().set("session", token, { httpOnly: true, expires: new Date(Date.now() + 60 * 60 * 1000) });
+        return new Response(null, { status: 201 });
 
     } catch (e: any) {
         console.error(e);

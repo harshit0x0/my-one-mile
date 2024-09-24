@@ -1,9 +1,10 @@
 import Image from "next/image"
 import profileIcon from "../../public/profile-icon.png"
 import { UserType } from "@/src/models/users"
+import { getImageURL } from "../actions";
 export default async function ProfileCard({ user }: { user: UserType }) {
 
-    const imageURL = null;
+    const imageURL = user?.image_id ? await getImageURL(user.image_id) : null;
     return (
         <div className="border mx-auto flex flex-col justify-center p-5 bg-gray-100 w-2/4 my-10">
             <h1 className="text-3xl text-center">Your profile</h1>

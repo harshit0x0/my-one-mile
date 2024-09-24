@@ -1,19 +1,22 @@
 'use client'
 
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { UserType } from "@/src/models/users";
+import { logout } from "../actions";
 
-export default function AuthButtons() {
+export default function AuthButtons({ user }: { user: UserType | null }) {
 
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-    const [user, setUser] = React.useState<UserType>({} as UserType);
+    useEffect(() => {
+        setIsLoggedIn(!!user);
+    }, [])
     const router = useRouter();
-    const handleLogout = () => {
-        //some logic here
+    const handleLogout = async () => {
         setIsLoggedIn(false);
-        router.refresh();
+        await logout();
+        router.push('/');
     }
 
     return (
@@ -26,7 +29,7 @@ export default function AuthButtons() {
                 </div>
             }
             {
-                isLoggedIn && <div>
+                isLoggedIn && user && <div>
                     <div className="">
                         <Link className="text-background underline d-flex rounded px-4 py-3 hover:bg-white" href="/profile">{user.name ? user.name : user.email}</Link>
                     </div>

@@ -20,3 +20,7 @@ export const Image = sequelize.define<ImageModel>('Image', {
     updatedAt: false,
 });
 
+export interface ImageType {
+    image_id: string;
+    url: string;
+}

@@ -1,9 +1,11 @@
 import Header from "./components/header";
-export default function Home() {
+import { getUser } from "./actions";
+
+export default async function Home() {
+  const user = await getUser();
   return (
     <div className="bg-background h-screen">
-      <Header />
-
+      <Header user={user} />
     </div>
   )
 }
