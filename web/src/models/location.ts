@@ -2,15 +2,19 @@ import { db as sequelize } from "../dbConfig/server";
 import { InferAttributes, InferCreationAttributes, Model, DataTypes } from "sequelize";
 
 interface LocationModel extends Model<InferAttributes<LocationModel>, InferCreationAttributes<LocationModel>> {
-    id: string;
+    location_id: string;
+    block: string | null;
     city: string | null;
     state: string | null;
     country: string | null;
 }
 
-export const Location = sequelize.define('Location', {
-    id: {
+export const Location = sequelize.define<LocationModel>('Location', {
+    location_id: {
         primaryKey: true,
+        type: DataTypes.STRING
+    },
+    block: {
         type: DataTypes.STRING
     },
     city: {
@@ -23,7 +27,7 @@ export const Location = sequelize.define('Location', {
         type: DataTypes.STRING
     }
 }, {
-    tableName: 'locations',
+    tableName: 'location',
     createdAt: false,
     updatedAt: false,
 }

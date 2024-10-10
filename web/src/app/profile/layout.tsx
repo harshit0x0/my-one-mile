@@ -1,6 +1,7 @@
 import React from "react"
 import Header from "../components/header"
 import { getUser } from "../actions";
+import Head from "next/head";
 
 export const metadata = {
     title: "Profile page",
@@ -10,7 +11,7 @@ export const metadata = {
 
 export default async function ProfileLayout({ children }: { children: React.ReactNode }) {
     const user = await getUser();
-    console.log("profile page: user: ", user);
+    // console.log("profile page: user: ", user);
     return (
         <>
             <Header user={user} />

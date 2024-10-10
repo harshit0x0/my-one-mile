@@ -4,10 +4,10 @@ import ProfileForm from "../components/ProfileForm";
 export default async function Profile() {
     const user = await getUser();
     return (
-        <>
+        <div>
             {user && <ProfileCard user={user} />}
             {user && <ProfileForm user={user} />}
-        </>
+        </div>
     )
 
 }

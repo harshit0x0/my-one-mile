@@ -4,6 +4,8 @@ import { cookies } from "next/headers";
 import { UserType } from "../models/users";
 import { authUser } from "../auth/authUser";
 import { ImageType } from "../models/images";
+import { revalidatePath } from "next/cache";
+import { Location } from "../models/location";
 
 export async function getUser() {
     const session = cookies().get('session');
@@ -27,4 +29,17 @@ export async function getImageURL(img_id: string) {
     } catch (e) {
         console.log("cannot find profile image");
     }
+}
+
+export async function getLocation(location_id: string) {
+    try {
+        const location = await Location.findByPk(location_id);
+        return location;
+    } catch (e) {
+        console.log("cannot find location");
+    }
+}
+
+export async function revalidateGivenPath(path: string) {
+    revalidatePath(path);
 }

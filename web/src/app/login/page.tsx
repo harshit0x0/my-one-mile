@@ -4,7 +4,7 @@ import Image from "next/image"
 import logo from '../../public/logo-dark.png'
 import Link from "next/link"
 import { useRouter } from "next/navigation";
-
+import { revalidateGivenPath } from "../actions";
 export default function Login() {
     const router = useRouter();
     const [isLoading, setIsLoading] = React.useState(false);
@@ -25,7 +25,8 @@ export default function Login() {
         if (!res.ok) { alert(await res.text()); }
         else {
             alert("successfully logged in");
-            router.push('/')
+            revalidateGivenPath('/');
+            router.push('/');
         }
     }
 
