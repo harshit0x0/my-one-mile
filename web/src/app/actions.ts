@@ -28,6 +28,7 @@ export async function getImageURL(img_id: string) {
         }
     } catch (e) {
         console.log("cannot find profile image");
+        console.log(e);
     }
 }
 
@@ -37,6 +38,7 @@ export async function getLocation(location_id: string) {
         return location;
     } catch (e) {
         console.log("cannot find location");
+        console.log(e);
     }
 }
 
