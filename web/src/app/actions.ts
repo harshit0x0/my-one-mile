@@ -14,6 +14,23 @@ export async function getUser() {
     return user as unknown as UserType;
 }
 
+export async function getTheme() {
+    const theme = cookies().get('theme');
+    if (!theme || theme.value === '') return 'light';
+    return theme.value;
+}
+
+export async function toggleTheme() {
+    console.log("toggle theme")
+    const theme = cookies().get('theme');
+    if (!theme || theme.value === '' || theme.value === 'light') {
+        cookies().set('theme', 'dark', { expires: new Date(Date.now() + 60 * 60 * 1000), httpOnly: true });
+    } else {
+        cookies().set('theme', 'light', { expires: new Date(Date.now() + 60 * 60 * 1000), httpOnly: true });
+    }
+    revalidatePath('/');
+}
+
 export async function logout() {
     cookies().set('session', '', { expires: new Date(Date.now() + 60 * 60 * 1000), httpOnly: true });
     return;

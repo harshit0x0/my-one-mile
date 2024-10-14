@@ -81,88 +81,92 @@ export default function ProfileForm({ user }: { user: UserType }) {
     }
 
     return (
-        <div className="border mx-auto flex flex-col justify-center px-5 py-10 bg-gray-300">
-            <h1 className="text-3xl text-center">Edit profile</h1>
-            {loading && <p className="text-center">Loading...</p>}
-            <form action="" onSubmit={handleFormSubmit} className="mx-auto flex flex-col w-full lg:w-3/4 justify-center items-center px-10 py-10 my-5 bg-gray-100">
-
-                {/* profile photo */}
-                <div className="shrink-0 flex flex items-center">
-                    <Image className="h-16 w-16 object-cover rounded-full" src={profileIcon} alt="Current profile photo" />
-                    <label className="block">
-                        <span className="sr-only">Choose profile photo</span>
-                        <input
-                            type="file"
-                            className="
-                                    block w-full text-sm text-slate-500
-                                    file:mr-4 file:py-2 file:px-4
+        <div className="mx-auto p-4 sm:p-6 md:p-8 bg-background w-full max-w-2xl rounded-lg shadow-md">
+            <h1 className="text-2xl sm:text-3xl text-center mb-6 font-bold text-text">Edit Profile</h1>
+            {loading && <p className="text-center text-3xl text-text">Loading...</p>}
+            <form onSubmit={handleFormSubmit} className="p-6 rounded-lg shadow-sm">
+                {/* Profile photo */}
+                <div className="flex flex-col items-center mb-6">
+                    <Image className="h-24 w-24 object-cover rounded-full mb-3" src={profileIcon} alt="Current profile photo" />
+                    <label className="cursor-pointer bg-secondary_accent text-white py-2 px-4 rounded-full hover:bg-secondary transition duration-300">
+                        <input type="file" className="block w-full text-sm text-white
+                                    file:mr-4 file:py-1 file:px-4
                                     file:rounded-full file:border-0
                                     file:text-sm file:font-semibold
                                     file:bg-violet-50 file:text-violet-700
-                                    hover:file:bg-violet-100"
-                        />
+                                    hover:file:bg-violet-100" />
                     </label>
                 </div>
 
-                {/* name */}
-                <div className="mt-5 flex w-3/4">
-                    <label htmlFor="name" className="block font-medium leading-8 text-gray-900">Name</label>
+                {/* Name */}
+                <div className="mb-4">
+                    <label htmlFor="name" className="block text-sm font-medium text-text mb-1">Name</label>
                     <input type="text"
                         id="name" name="name"
-                        placeholder={user?.name || "----------"}
-                        className="ml-3 px-3"
+                        placeholder={user?.name || "Enter your name"}
+                        className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                     />
                 </div>
 
                 {/* DOB */}
-                <div className="mt-5 flex lg:w-3/4 sm:w-3/4">
-                    <label htmlFor="dob" className="block font-medium leading-8 text-gray-900">DOB</label>
+                <div className="mb-4">
+                    <label htmlFor="dob" className="block text-sm font-medium text-text mb-1">Date of Birth</label>
                     <input type="date"
                         id="dob"
                         name="dob"
-                        placeholder={user?.dob?.toString() || "----------"}
-                        className="appearence-none w-full  mx-3 px-5 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
+                        placeholder={user?.dob?.toString() || "Select your date of birth"}
+                        className="w-full px-3 py-2  rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
                 </div>
 
-                {/* location */}
-                <div className="mt-5 align-items-center lg:w-3/4 sm:w-3/4 flex">
-
-                    <div className="block font-medium leading-8 text-gray-900">Location</div>
-                    <div className="flex flex-col w-full mx-3">
-                        <div className="flex">
+                {/* Location */}
+                <div className="mb-6">
+                    <label className="block text-sm font-medium text-text mb-1">Location</label>
+                    <div className="flex flex-col">
+                        <div className="flex mb-2">
                             <div
                                 contentEditable={!isLocationSet}
                                 id="location"
                                 onInput={handleLocChange}
-                                className={"w-full min-w-40 " + (isLocationSet ? " bg-gray-200 text-gray-400 " : " bg-white ") + "rounded-sm h-full p-1 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"}
+                                className={`w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${isLocationSet ? "bg-gray-400 text-gray-500" : "bg-white"}`}
                             ></div>
-                            <div className="ml-3 bg-gray-400 px-3 py-1" onClick={() => setIsLocationSet(!isLocationSet)}> Edit </div>
+                            <button
+                                type="button"
+                                onClick={() => setIsLocationSet(!isLocationSet)}
+                                className="ml-2 px-4 py-2 bg-secondary_accent text-white rounded-md hover:bg-secondary transition duration-300"
+                            >
+                                {isLocationSet ? "Edit" : "Lock"}
+                            </button>
                         </div>
-                        <div className="w-full bg-white mt-2 px-3 rounded-sm h-full border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-
-                            {!isLocationSet &&
-                                suggestions?.map((suggestion, i) =>
+                        {!isLocationSet && suggestions && suggestions.length > 0 && (
+                            <div className="mt-2 border border-gray-200 rounded-md shadow-sm">
+                                {suggestions.map((suggestion, i) => (
                                     <div
                                         key={i}
                                         id={suggestion.id}
                                         onClick={handleSelect}
-                                        className="border-b-2 border-gray-200 text-sm pt-3 hover:bg-gray-100 cursor-pointer"
+                                        className="px-3 py-2 bg-violet-200 hover:bg-background cursor-pointer text-sm border-b last:border-b-0"
                                     >
-                                        {suggestion.block + ", " + suggestion.city + ", " + suggestion.state + ", " + suggestion.country}
+                                        {`${suggestion.block}, ${suggestion.city}, ${suggestion.state}, ${suggestion.country}`}
                                     </div>
-                                )
-                            }
-                        </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
-
                 </div>
 
                 <button
+                    type="submit"
                     disabled={!isLocationSet}
-                    className={"mt-5 w-1/4" + (isLocationSet ? " bg-indigo-500 hover:bg-indigo-700 " : " bg-gray-500 ") + " text-white font-bold py-2 px-4 rounded"}>Save Changes</button>
-
-            </form >
-        </div >
-    )
+                    className={`w-full py-2 px-4 rounded-md font-semibold text-white transition duration-300 ${isLocationSet
+                        ? "bg-secondary_accent hover:bg-secondary"
+                        : "bg-gray-400 cursor-not-allowed"
+                        }`}
+                >
+                    Save Changes
+                </button>
+            </form>
+        </div>
+    );
 }
 
