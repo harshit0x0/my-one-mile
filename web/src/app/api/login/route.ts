@@ -20,6 +20,7 @@ export async function POST(request: Request) {
             return new Response('Incorrect password', { status: 401 });
         }
         const token = await signUser(user[0].dataValues);
+        console.log(token);
         cookies().set('session', token, { expires: new Date(Date.now() + 60 * 60 * 1000), httpOnly: true });
         return new Response(null, { status: 201 });
     } catch (e) {
