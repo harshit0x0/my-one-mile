@@ -16,7 +16,7 @@ export interface ActivityModel extends Model<InferAttributes<ActivityModel>, Inf
     createdAt: Date;
 }
 
-export const Activity = sequelize.define<ActivityModel>('Activity', {
+const Activity = sequelize.define<ActivityModel>('Activity', {
     activity_id: {
         primaryKey: true,
         type: DataTypes.UUIDV4,
@@ -64,3 +64,4 @@ export const Activity = sequelize.define<ActivityModel>('Activity', {
     updatedAt: false,
 });
 
+export { Activity };

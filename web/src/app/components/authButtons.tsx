@@ -49,6 +49,9 @@ export default function AuthButtons({ user }: { user: UserType | null }) {
             <div className={`absolute bg-background md:bg-transparent right-1 top-16 shadow-lg rounded-lg py-2 ${isMenuOpen ? 'block' : 'hidden'} md:block md:static md:shadow-none`}>
                 {!isLoggedIn ? (
                     <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
+                        <Link className="text-text text-center hover:underline rounded w-32 px-8 md:w-auto md:px-2 py-3 md:w-18" href="/activity">
+                            Activity
+                        </Link>
                         <button className="text-text text-center hover:underline rounded w-32 px-8 md:w-auto md:px-2 py-3 md:w-18" onClick={changeTheme}>
                             Theme
                         </button>
@@ -62,6 +65,9 @@ export default function AuthButtons({ user }: { user: UserType | null }) {
                 ) : (
                     isLoggedIn && user && (
                         <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
+                            <Link className="text-text text-center hover:underline rounded w-32 px-8 md:w-auto md:px-2 py-3 md:w-18" href="/activity">
+                                Activity
+                            </Link>
                             <button className="text-text text-center hover:underline rounded w-32 px-8 md:w-auto md:px-2 py-3 md:w-18" onClick={changeTheme}>
                                 Theme
                             </button>

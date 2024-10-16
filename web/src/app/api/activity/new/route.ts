@@ -1,5 +1,4 @@
 import { Activity } from '@/src/models/activity';
-import { User } from '@/src/models/users';
 import { authUser } from '@/src/auth/authUser';
 import { cookies } from 'next/headers';
 import { v4 as uuidv4 } from 'uuid';
@@ -20,23 +19,23 @@ export async function POST(request: Request) {
 
         const body = await request.json();
         console.log(body);
-        const { type_id, status_id, title, description } = body;
+        const { type_id, status_id, title, description, location } = body;
 
         // Validate the request body
-        if (!type_id || !status_id || !description) {
+        if (!type_id || !status_id || !description || !title || !location) {
             return new Response('Missing required fields', { status: 400 });
         }
 
         // Get the user's location from the user model
-        const location: any = user.location;
         const user_id: any = user.id;
+        const location_id: any = user.location;
 
         // Create a new activity
         const activity = await Activity.create({
             activity_id: uuidv4(),
             type_id,
             status_id,
-            location: location,
+            location: location_id,
             title,
             description,
             createdBy: user_id,

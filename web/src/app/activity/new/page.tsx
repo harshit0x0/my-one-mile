@@ -1,6 +1,7 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { getUser, getCity } from '@/src/app/actions';
 
 interface ActivityFormData {
     type_id: number;
@@ -32,6 +33,16 @@ const CreateActivityPage = () => {
         title: ''
     });
 
+    useEffect(() => {
+        const fetchLocation = async () => {
+            let user = await getUser();
+            let location = await getCity(user?.location ?? '');
+            console.log(location);
+            setFormData(prev => ({ ...prev, location: location ?? '' }));
+        };
+        fetchLocation();
+    }, []);
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
@@ -41,7 +52,7 @@ const CreateActivityPage = () => {
         e.preventDefault();
 
         // Validate form data
-        if (!formData.description || !formData.status_id || !formData.type_id) {
+        if (!formData.description || !formData.status_id || !formData.type_id || !formData.title || !formData.location) {
             alert('Please fill in all required fields');
             return;
         }
@@ -74,7 +85,7 @@ const CreateActivityPage = () => {
                         type="text"
                         id="location"
                         name="location"
-                        value={"delhi"}
+                        value={formData.location}
                         onChange={handleInputChange}
                         className="w-full p-2  rounded bg-gray-400 text-text
                                    focus:ring-2 focus:ring-primary focus:border-transparent

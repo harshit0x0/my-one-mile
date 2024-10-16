@@ -5,7 +5,8 @@ import { UserType } from "../models/users";
 import { authUser } from "../auth/authUser";
 import { ImageType } from "../models/images";
 import { revalidatePath } from "next/cache";
-import { Location } from "../models/location";
+import { LocationType } from "../models/location";
+import { Location, Activity } from "../models/index";
 
 export async function getUser() {
     const session = cookies().get('session');
@@ -52,7 +53,17 @@ export async function getImageURL(img_id: string) {
 export async function getLocation(location_id: string) {
     try {
         const location = await Location.findByPk(location_id);
-        return location;
+        return location as LocationType;
+    } catch (e) {
+        console.log("cannot find location");
+        console.log(e);
+    }
+}
+
+export async function getCity(location_id: string) {
+    try {
+        const location = await Location.findByPk(location_id);
+        return location?.city;
     } catch (e) {
         console.log("cannot find location");
         console.log(e);
@@ -61,4 +72,41 @@ export async function getLocation(location_id: string) {
 
 export async function revalidateGivenPath(path: string) {
     revalidatePath(path);
+}
+
+export const getActivities = async () => {
+    try {
+        const activities = await Activity.findAll({ include: Location });
+        const data = activities.map((activity) => {
+            return {
+                ...activity.dataValues,
+                // @ts-ignore
+                location: activity.dataValues.Location.dataValues.city,
+                Location: null
+            };
+        });
+        return JSON.stringify(data);
+    } catch (error) {
+        console.error('Error fetching activities:', error);
+        return null;
+    }
+};
+
+export const getRecentActivities = async () => {
+    try {
+        const activities = await Activity.findAll({ limit: 5, include: Location, order: [['createdAt', 'DESC']] });
+        console.log(activities);
+        const data = activities.map((activity) => {
+            return {
+                ...activity.dataValues,
+                // @ts-ignore
+                location: activity.dataValues.Location.dataValues.city,
+                Location: null
+            };
+        });
+        return JSON.stringify(data);
+    } catch (error) {
+        console.error('Error fetching activities:', error);
+        return null;
+    }
 }
