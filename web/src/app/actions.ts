@@ -6,7 +6,7 @@ import { authUser } from "../auth/authUser";
 import { ImageType } from "../models/images";
 import { revalidatePath } from "next/cache";
 import { LocationType } from "../models/location";
-import { Location, Activity } from "../models/index";
+import { Location, Activity, Post, User } from "../models/index";
 
 export async function getUser() {
     const session = cookies().get('session');
@@ -15,6 +15,15 @@ export async function getUser() {
     return user as unknown as UserType;
 }
 
+export const getUserById = async (id: string) => {
+    try {
+        const data = await User.findByPk(id);
+        return JSON.stringify(data);
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        return null;
+    }
+};
 export async function getTheme() {
     const theme = cookies().get('theme');
     if (!theme || theme.value === '') return 'light';
@@ -95,7 +104,6 @@ export const getActivities = async () => {
 export const getRecentActivities = async () => {
     try {
         const activities = await Activity.findAll({ limit: 5, include: Location, order: [['createdAt', 'DESC']] });
-        console.log(activities);
         const data = activities.map((activity) => {
             return {
                 ...activity.dataValues,
@@ -107,6 +115,35 @@ export const getRecentActivities = async () => {
         return JSON.stringify(data);
     } catch (error) {
         console.error('Error fetching activities:', error);
+        return null;
+    }
+}
+
+export const getPosts = async () => {
+    try {
+        const posts = await Post.findAll({
+            include: [{
+                model: Activity,
+                include: [{
+                    model: Location
+                }, {
+                    model: User,
+                    attributes: ['name', 'id']
+                }]
+            }],
+            order: [['createdAt', 'DESC']]
+        });
+        const data = posts.map((post) => {
+            return {
+                ...post.dataValues,
+                // @ts-ignore
+                activity: post.dataValues.Activity.dataValues,
+                Activity: null
+            };
+        });
+        return JSON.stringify(data);
+    } catch (error) {
+        console.error('Error fetching posts:', error);
         return null;
     }
 }

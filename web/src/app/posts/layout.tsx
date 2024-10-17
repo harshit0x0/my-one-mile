@@ -8,7 +8,7 @@ export const metadata = {
     keywords: ["", "", ""],
 }
 
-export default async function ActivityLayout({ children }: { children: React.ReactNode }) {
+export default async function PostsLayout({ children }: { children: React.ReactNode }) {
     const user = await getUser();
     return (
         <>

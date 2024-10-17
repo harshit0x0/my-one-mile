@@ -1,8 +1,16 @@
 import { Location } from "./location";
 import { Activity } from "./activity";
+import { Post } from "./posts";
+import { User } from "./users";
 
+User.hasMany(Activity, { foreignKey: 'createdBy' });
+Activity.belongsTo(User, { foreignKey: 'createdBy' });
 
 Location.hasMany(Activity, { foreignKey: 'location', onDelete: 'cascade' });
 Activity.belongsTo(Location, { foreignKey: 'location' });
 
-export { Location, Activity };
+Activity.hasOne(Post, { foreignKey: 'activity_id', onDelete: 'cascade' });
+Post.belongsTo(Activity, { foreignKey: 'activity_id' });
+
+
+export { Location, Activity, Post, User };

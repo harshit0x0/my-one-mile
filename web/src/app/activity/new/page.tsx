@@ -67,9 +67,18 @@ const CreateActivityPage = () => {
         })
         console.log('Submitting:', formData);
 
-        alert(res.statusText);
         if (res.ok) {
-            router.push('/activity');
+            // Prompt user if they want to create a post
+            const createPost = window.confirm("Do you want to create a post for this activity so others can talk about it?");
+
+            if (createPost) {
+                // Redirect to post/new with prefilled data
+                router.push(`/posts/new?title=${formData.title}&activity_id=${(await res.json()).activity_id}`);
+            } else {
+                router.push('/activity');
+            }
+        } else {
+            alert(res.statusText);
         }
     };
 
@@ -87,7 +96,7 @@ const CreateActivityPage = () => {
                         name="location"
                         value={formData.location}
                         onChange={handleInputChange}
-                        className="w-full p-2  rounded bg-gray-400 text-text
+                        className="w-full p-2 rounded bg-gray-400 text-text
                                    focus:ring-2 focus:ring-primary focus:border-transparent
                                    transition duration-200 ease-in-out transform hover:scale-101"
                         required
@@ -142,7 +151,7 @@ const CreateActivityPage = () => {
                         required
                     ></input>
                 </div>
-                {/* descriptioin */}
+                {/* description */}
                 <div>
                     <label htmlFor="description" className="block text-sm font-medium mb-1">Description</label>
                     <textarea

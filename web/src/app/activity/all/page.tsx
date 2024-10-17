@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { ActivityModel } from '@/src/models/activity';
 import ActivityItem from '../../components/ActivityItem';
-import { getActivities, getCity } from '@/src/app/actions';
+import { getActivities } from '@/src/app/actions';
 
 const AllActivitiesPage: React.FC = () => {
 
