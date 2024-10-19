@@ -12,5 +12,8 @@ Activity.belongsTo(Location, { foreignKey: 'location' });
 Activity.hasOne(Post, { foreignKey: 'activity_id', onDelete: 'cascade' });
 Post.belongsTo(Activity, { foreignKey: 'activity_id' });
 
+User.hasMany(Post, { foreignKey: 'user_id', onDelete: 'cascade' });
+Post.belongsTo(User, { foreignKey: 'user_id' });
+
 
 export { Location, Activity, Post, User };

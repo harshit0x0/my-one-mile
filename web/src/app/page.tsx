@@ -10,6 +10,7 @@ export default async function Home() {
       <main className="flex flex-col justify-center items-center h-full bg-background">
         <h1 className="text-3xl text-text text-center my-3">Welcome to My One Mile <span role="img" aria-label="running">🏃</span></h1>
         <Link href="/activity"> Activites </Link>
+        <Link href="/posts"> Posts </Link>
       </main>
     </div>
   )

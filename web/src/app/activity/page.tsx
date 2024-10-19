@@ -44,7 +44,9 @@ const ActivityHomepage: React.FC = () => {
             <h2 className="text-2xl font-semibold mb-4">Recent activity</h2>
             <div>
                 {recentActivities.map((activity) => (
-                    <ActivityItem key={activity.activity_id} activity={activity} />
+                    <Link key={activity.activity_id} href={`/activity/${activity.activity_id}`}>
+                        <ActivityItem key={activity.activity_id} activity={activity} />
+                    </Link>
                 ))}
             </div>
         </div>

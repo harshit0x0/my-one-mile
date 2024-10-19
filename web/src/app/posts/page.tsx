@@ -6,6 +6,7 @@ import { getPosts } from '@/src/app/actions';
 import PostItem from '@/src/app/components/PostItem';
 import { ActivityModel } from '@/src/models/activity';
 import { UserType } from '@/src/models/users';
+import Link from 'next/link';
 
 type PostType = {
     post_id: string;
@@ -79,7 +80,9 @@ const posts = () => {
                     <p className="text-center text-gray-500">No posts found.</p>
                 ) : (
                     filteredPosts.map(post => (
-                        <PostItem key={post.post_id} post={post} />
+                        <Link key={post.post_id} href={`/posts/${post.post_id}`}>
+                            <PostItem key={post.post_id} post={post} />
+                        </Link>
                     ))
                 )}
             </div>

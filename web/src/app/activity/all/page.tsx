@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { ActivityModel } from '@/src/models/activity';
 import ActivityItem from '../../components/ActivityItem';
 import { getActivities } from '@/src/app/actions';
+import Link from 'next/link';
 
 const AllActivitiesPage: React.FC = () => {
 
@@ -62,7 +63,9 @@ const AllActivitiesPage: React.FC = () => {
                     <p className="text-center text-gray-500">No activities found.</p>
                 ) : (
                     filteredActivities.map(activity => (
-                        <ActivityItem key={activity.activity_id} activity={activity} />
+                        <Link href={`/activity/${activity.activity_id}`}>
+                            <ActivityItem key={activity.activity_id} activity={activity} />
+                        </Link>
                     ))
                 )}
             </div>

@@ -15,7 +15,7 @@ export default function ActivityItem({ activity }: { activity: ActivityModel }) 
     };
 
     return (
-        <div className="mb-4 p-4 bg-secondary rounded-lg shadow-md transition duration-300 ease-in-out hover:shadow-lg hover:scale-101">
+        <div className="mb-4 p-4 bg-secondary rounded-lg shadow-md transition duration-300 ease-in-out hover:shadow-lg hover:scale-105">
             <h3 className="text-lg font-semibold text-primary mb-2">{activity.title}</h3>
             <p className="text-text mb-2">Location: {activity.location}</p>
             <div className="flex justify-between items-center">

@@ -119,6 +119,59 @@ export const getRecentActivities = async () => {
     }
 }
 
+export const getActivity = async (id: string) => {
+    try {
+        const activity = await Activity.findByPk(id, {
+            include: [
+                { model: Location }, { model: User, attributes: ['name', 'id'] }
+            ]
+        });
+        const data = {
+            ...activity?.dataValues,
+            // @ts-ignore
+            location: activity?.dataValues.Location.dataValues.city,
+            Location: null
+        };
+        return JSON.stringify(data);
+    } catch (error) {
+        console.error('Error fetching activity:', error);
+        return null;
+    }
+}
+
+
+export const updateActivity = async (id: string, data: any) => {
+    try {
+        const activity = await Activity.findByPk(id);
+        if (!activity) {
+            return null;
+        }
+        // location does not come right from edit form
+        data = { ...data, location: activity.location };
+
+        await activity.update(data);
+        return true;
+    } catch (error) {
+        console.error('Error editing activity:', error);
+        return null;
+    }
+}
+
+export const deleteActivity = async (id: string) => {
+    try {
+        const activity = await Activity.findByPk(id);
+        if (!activity) {
+            return null;
+        }
+        await activity.destroy();
+        return true;
+    } catch (error) {
+        console.error('Error deleting activity:', error);
+        return null;
+    }
+}
+
+
 export const getPosts = async () => {
     try {
         const posts = await Post.findAll({
@@ -144,6 +197,66 @@ export const getPosts = async () => {
         return JSON.stringify(data);
     } catch (error) {
         console.error('Error fetching posts:', error);
+        return null;
+    }
+}
+
+export const getPost = async (id: string) => {
+    try {
+        const post = await Post.findByPk(id, {
+            include: [
+                { model: Activity, include: [{ model: Location }, { model: User, attributes: ['name', 'id'] }] },
+                { model: User, attributes: ['name', 'id'] }
+            ]
+        });
+        const data = {
+            ...post?.dataValues,
+            // @ts-ignore
+            activity: post?.dataValues.Activity.dataValues,
+            Activity: null
+        };
+        return JSON.stringify(data);
+    } catch (error) {
+        console.error('Error fetching post:', error);
+        return null;
+    }
+}
+
+export const likePost = async (id: string) => {
+    try {
+        const post = await Post.findByPk(id);
+        if (post) {
+            post.likes = post.likes + 1;
+            await post.save();
+            return JSON.stringify(post);
+        }
+    } catch (error) {
+        console.error('Error liking post:', error);
+    }
+}
+
+export const deletePost = async (id: string) => {
+    try {
+        const post = await Post.findByPk(id);
+        if (post) {
+            await post.destroy();
+            return true;
+        }
+    } catch (error) {
+        console.error('Error deleting post:', error);
+    }
+}
+
+export const updatePost = async (id: string, data: any) => {
+    try {
+        const post = await Post.findByPk(id);
+        if (!post) {
+            return null;
+        }
+        await post.update(data);
+        return true;
+    } catch (error) {
+        console.error('Error editing post:', error);
         return null;
     }
 }
