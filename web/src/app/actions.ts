@@ -6,13 +6,22 @@ import { authUser } from "../auth/authUser";
 import { ImageType } from "../models/images";
 import { revalidatePath } from "next/cache";
 import { LocationType } from "../models/location";
-import { Location, Activity, Post, User } from "../models/index";
+import { Location, Activity, Post, User, Comment } from "../models/index";
+import { CommentModel } from "../models/comments";
+
 
 export async function getUser() {
-    const session = cookies().get('session');
-    if (!session || session.value === '') return null;
-    const user = await authUser(session.value);
-    return user as unknown as UserType;
+    try {
+        const session = cookies().get('session');
+        if (!session || session.value === '') return null;
+        const user = await authUser(session.value);
+        return user as unknown as UserType;
+    } catch (error) {
+        console.error('\nError fetching user\n');
+        // @ts-ignore
+        console.error(error.original);
+        return null;
+    }
 }
 
 export const getUserById = async (id: string) => {
@@ -20,7 +29,9 @@ export const getUserById = async (id: string) => {
         const data = await User.findByPk(id);
         return JSON.stringify(data);
     } catch (error) {
-        console.error('Error fetching user:', error);
+        console.error('\nError fetching user\n');
+        // @ts-ignore
+        console.error(error.original);
         return null;
     }
 };
@@ -53,9 +64,11 @@ export async function getImageURL(img_id: string) {
             const img = await res.json() as ImageType;
             return img.url;
         }
-    } catch (e) {
-        console.log("cannot find profile image");
-        console.log(e);
+    } catch (error) {
+        console.error('\nError fetching imgae url\n');
+        // @ts-ignore
+        console.error(error.original);
+        return null;
     }
 }
 
@@ -63,9 +76,11 @@ export async function getLocation(location_id: string) {
     try {
         const location = await Location.findByPk(location_id);
         return location as LocationType;
-    } catch (e) {
-        console.log("cannot find location");
-        console.log(e);
+    } catch (error) {
+        console.error('\nError fetching location\n');
+        // @ts-ignore
+        console.error(error.original);
+        return null;
     }
 }
 
@@ -73,9 +88,11 @@ export async function getCity(location_id: string) {
     try {
         const location = await Location.findByPk(location_id);
         return location?.city;
-    } catch (e) {
-        console.log("cannot find location");
-        console.log(e);
+    } catch (error) {
+        console.error('\nError fetching city\n');
+        // @ts-ignore
+        console.error(error.original);
+        return null;
     }
 }
 
@@ -96,7 +113,9 @@ export const getActivities = async () => {
         });
         return JSON.stringify(data);
     } catch (error) {
-        console.error('Error fetching activities:', error);
+        console.error('\nError fetching all activities\n');
+        // @ts-ignore
+        console.error(error.original);
         return null;
     }
 };
@@ -114,7 +133,9 @@ export const getRecentActivities = async () => {
         });
         return JSON.stringify(data);
     } catch (error) {
-        console.error('Error fetching activities:', error);
+        console.error('\nError fetching recent activity\n');
+        // @ts-ignore
+        console.error(error.original);
         return null;
     }
 }
@@ -134,7 +155,9 @@ export const getActivity = async (id: string) => {
         };
         return JSON.stringify(data);
     } catch (error) {
-        console.error('Error fetching activity:', error);
+        console.error('\nError fetching activity\n');
+        // @ts-ignore
+        console.error(error.original);
         return null;
     }
 }
@@ -152,7 +175,9 @@ export const updateActivity = async (id: string, data: any) => {
         await activity.update(data);
         return true;
     } catch (error) {
-        console.error('Error editing activity:', error);
+        console.error('\nError updating activity\n');
+        // @ts-ignore
+        console.error(error.original);
         return null;
     }
 }
@@ -166,7 +191,9 @@ export const deleteActivity = async (id: string) => {
         await activity.destroy();
         return true;
     } catch (error) {
-        console.error('Error deleting activity:', error);
+        console.error('\nError deleting activity\n');
+        // @ts-ignore
+        console.error(error.original);
         return null;
     }
 }
@@ -196,7 +223,9 @@ export const getPosts = async () => {
         });
         return JSON.stringify(data);
     } catch (error) {
-        console.error('Error fetching posts:', error);
+        console.error('\nError fetching posts\n');
+        // @ts-ignore
+        console.error(error.original);
         return null;
     }
 }
@@ -217,7 +246,9 @@ export const getPost = async (id: string) => {
         };
         return JSON.stringify(data);
     } catch (error) {
-        console.error('Error fetching post:', error);
+        console.error('\nError fetching post\n');
+        // @ts-ignore
+        console.error(error.original);
         return null;
     }
 }
@@ -231,7 +262,10 @@ export const likePost = async (id: string) => {
             return JSON.stringify(post);
         }
     } catch (error) {
-        console.error('Error liking post:', error);
+        console.error('\nError liking posts\n');
+        // @ts-ignore
+        console.error(error.original);
+        return null;
     }
 }
 
@@ -243,7 +277,10 @@ export const deletePost = async (id: string) => {
             return true;
         }
     } catch (error) {
-        console.error('Error deleting post:', error);
+        console.error('\nError deleting posts\n');
+        // @ts-ignore
+        console.error(error.original);
+        return null;
     }
 }
 
@@ -256,7 +293,77 @@ export const updatePost = async (id: string, data: any) => {
         await post.update(data);
         return true;
     } catch (error) {
-        console.error('Error editing post:', error);
+        console.error('\nError updating post\n');
+        // @ts-ignore
+        console.error(error.original);
+        return null;
+    }
+}
+
+
+const getAllReplies: any = (reply_id: string, comments: CommentModel[]) => {
+    if (reply_id == null) {
+        return [];
+    }
+    return comments
+        .filter((comment) => comment.reply_id == reply_id)
+        .map((comment) => {
+            return {
+                ...comment.dataValues,
+                replies: getAllReplies(comment.comment_id, comments)
+            };
+        });
+}
+
+export const getCommentsByPostId = async (post_id: string) => {
+    try {
+        const AllComments = await Comment.findAll({ where: { post_id: post_id } });
+        // console.log("all comments, ", AllComments);
+        const comments = AllComments
+            .filter((comment) => comment.dataValues.reply_id == null)
+            .map((comment) => {
+                return {
+                    ...comment.dataValues,
+                    replies: getAllReplies(comment.comment_id, AllComments)
+                };
+            });
+        console.log("filtered comments", comments);
+        return JSON.stringify(comments);
+    } catch (error) {
+        console.error('\nError fetching comments\n');
+        // @ts-ignore
+        console.error(error.original);
+        return null;
+    }
+}
+
+export const updateComment = async (id: string, data: any) => {
+    try {
+        const comment = await Comment.findByPk(id);
+        if (!comment) {
+            return null;
+        }
+        await comment.update(data);
+        return true;
+    } catch (error) {
+        console.error('\nError updating comment\n');
+        // @ts-ignore
+        console.error(error.original);
+        return null;
+    }
+}
+
+export const deleteComment = async (id: string) => {
+    try {
+        const comment = await Comment.findByPk(id);
+        if (comment) {
+            await comment.destroy();
+            return true;
+        }
+    } catch (error) {
+        console.error('\nError deleting comment\n');
+        // @ts-ignore
+        console.error(error.original);
         return null;
     }
 }

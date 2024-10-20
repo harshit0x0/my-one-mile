@@ -7,6 +7,7 @@ import { ActivityModel } from '@/src/models/activity'; // Ensure you have these 
 import { deletePost, getPost } from '../actions';
 import Link from 'next/link';
 import { likePost } from '../actions';
+import CommentBox from './Comment_box';
 
 interface PostType {
     post_id: string;
@@ -126,10 +127,11 @@ export default function PostDetails({ id }: { id: string }) {
             </div >
             <button
                 onClick={() => router.push('/posts')}
-                className="bg-primary text-white px-4 mt-4 py-2 rounded hover:bg-opacity-90 transition duration-200"
+                className="bg-primary text-white px-4 mt-4 mb-6 py-2 rounded hover:bg-opacity-90 transition duration-200"
             >
                 Back to All Posts
             </button>
+            <CommentBox post_id={post.post_id} />
         </>
     );
 }
