@@ -67,6 +67,7 @@ const CommentBox = ({ post_id }: { post_id: string }) => {
             alert("Failed to delete comment");
         } else {
             alert("deleted Comment");
+            setComments((prevComments) => prevComments.filter((comment) => comment.comment_id !== comment_id));
         }
     }
 
@@ -85,12 +86,14 @@ const CommentBox = ({ post_id }: { post_id: string }) => {
     return (
         <div className="space-y-4">
             <h2 className="text-lg font-semibold text-text">Comments</h2>
-            <AddComment onAddComment={onAddComment} onDeleteComment={onDeleteComment} onEditComment={onEditComment} />
+            <div className='bg-secondary px-3 py-1 text-white inline-block rounded'>
+                <AddComment onAddComment={onAddComment} onEditComment={onEditComment} onDeleteComment={onDeleteComment} />
+            </div>
             {comments.length === 0 ? (
                 <p className="text-gray-500">No comments yet. Be the first to comment!</p>
             ) : (
                 comments.map((comment) => (
-                    <CommentItem key={comment.comment_id} comment={comment} />
+                    <CommentItem key={comment.comment_id} comment={comment} onAddComment={onAddComment} onEditComment={onEditComment} onDeleteComment={onDeleteComment} />
                 ))
             )}
         </div>

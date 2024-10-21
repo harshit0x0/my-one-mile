@@ -10,7 +10,7 @@ interface Comment {
 
 interface AddCommentProps {
     onAddComment: (data: string, reply_id: string | null) => void;
-    onEditComment: (comment_id: string, newData: string) => void;
+    onEditComment: (comment_id: string, text: string) => void;
     onDeleteComment: (comment_id: string) => void;
     existingComment?: Comment;
 }
@@ -30,7 +30,9 @@ const AddComment: React.FC<AddCommentProps> = ({ onAddComment, onEditComment, on
         if (!commentText.trim()) return;
 
         if (isEditing && existingComment) {
+            console.log("commentText: ", commentText, " existingComment: ", existingComment);
             onEditComment(existingComment.comment_id, commentText);
+            console.log("done");
         } else {
             onAddComment(commentText, null);
         }
@@ -47,7 +49,6 @@ const AddComment: React.FC<AddCommentProps> = ({ onAddComment, onEditComment, on
 
     function handleDialogToggle() {
         setIsDialogOpen(!isDialogOpen);
-        console.log(isDialogOpen);
     }
 
     return (

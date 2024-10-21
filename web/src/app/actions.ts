@@ -327,7 +327,7 @@ export const getCommentsByPostId = async (post_id: string) => {
                     replies: getAllReplies(comment.comment_id, AllComments)
                 };
             });
-        console.log("filtered comments", comments);
+        // console.log("filtered comments", comments);
         return JSON.stringify(comments);
     } catch (error) {
         console.error('\nError fetching comments\n');
@@ -337,13 +337,13 @@ export const getCommentsByPostId = async (post_id: string) => {
     }
 }
 
-export const updateComment = async (id: string, data: any) => {
+export const updateComment = async (text: string, id: string) => {
     try {
         const comment = await Comment.findByPk(id);
         if (!comment) {
             return null;
         }
-        await comment.update(data);
+        await comment.update({ data: text });
         return true;
     } catch (error) {
         console.error('\nError updating comment\n');
