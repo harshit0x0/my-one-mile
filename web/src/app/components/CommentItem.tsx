@@ -7,6 +7,7 @@ interface Comment {
     data: string;
     likes: number;
     created_by: string;
+    reply_id: string | null;
     replies?: Comment[];
 }
 
@@ -19,7 +20,12 @@ interface CommentProps {
 
 export default function CommentItem({ comment, onAddComment, onEditComment, onDeleteComment }: CommentProps) {
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isEditingComment, setIsEditingComment] = useState(false);
+    const [isReplyingComment, setIsReplyingComment] = useState(false);
+
     const toggleCollapse = () => setIsCollapsed(!isCollapsed);
+    const toggleEditingComment = () => setIsEditingComment(!isEditingComment);
+    const toggleReplyingComment = () => setIsReplyingComment(!isReplyingComment);
 
     return (
         <div className="space-y-2 ml-4">
@@ -39,8 +45,26 @@ export default function CommentItem({ comment, onAddComment, onEditComment, onDe
 
                             </div>
                             <div className='ml-8 space-x-3 w-full flex'>
-                                <AddComment existingComment={comment} onAddComment={onAddComment} onEditComment={onEditComment} onDeleteComment={onDeleteComment} />
-                                <AddComment onAddComment={onAddComment} onEditComment={onEditComment} onDeleteComment={onDeleteComment} />
+                                {/* edit comment */}
+                                {!isReplyingComment &&
+                                    <AddComment
+                                        isEditing={true}
+                                        toggleEditingComment={toggleEditingComment}
+                                        existingComment={comment}
+                                        onAddComment={onAddComment}
+                                        onEditComment={onEditComment}
+                                        onDeleteComment={onDeleteComment}
+                                    />}
+                                {/* reply */}
+                                {!isEditingComment &&
+                                    <AddComment
+                                        isEditing={false}
+                                        toggleReplyingComment={toggleReplyingComment}
+                                        existingComment={comment}
+                                        onAddComment={onAddComment}
+                                        onEditComment={onEditComment}
+                                        onDeleteComment={onDeleteComment}
+                                    />}
                             </div>
                         </div>
                         <div className='flex flex-col my-auto space-y-2'>
@@ -56,9 +80,15 @@ export default function CommentItem({ comment, onAddComment, onEditComment, onDe
 
             {/* Nested Replies */}
             {!isCollapsed && comment.replies && comment.replies.length > 0 && (
-                <div className="ml-4 border-l border-secondary pl-4">
+                <div className="ml-4 border-l space-y-2 border-secondary pl-4">
                     {comment.replies.map((reply) => (
-                        <CommentItem key={reply.comment_id} comment={reply} onAddComment={onAddComment} onEditComment={onEditComment} onDeleteComment={onDeleteComment} />
+                        <CommentItem
+                            key={reply.comment_id}
+                            comment={reply}
+                            onAddComment={onAddComment}
+                            onEditComment={onEditComment}
+                            onDeleteComment={onDeleteComment}
+                        />
                     ))}
                 </div>
             )}

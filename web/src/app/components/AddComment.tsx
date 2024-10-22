@@ -6,6 +6,7 @@ interface Comment {
     data: string;
     likes: number;
     created_by: string;
+    reply_id: string | null;
 }
 
 interface AddCommentProps {
@@ -13,11 +14,14 @@ interface AddCommentProps {
     onEditComment: (comment_id: string, text: string) => void;
     onDeleteComment: (comment_id: string) => void;
     existingComment?: Comment;
+    isEditing?: boolean;
+    toggleEditingComment?: () => void;
+    toggleReplyingComment?: () => void;
 }
 
-const AddComment: React.FC<AddCommentProps> = ({ onAddComment, onEditComment, onDeleteComment, existingComment }) => {
-    const [commentText, setCommentText] = useState(existingComment ? existingComment.data : '');
-    const [isEditing, setIsEditing] = useState(!!existingComment);
+const AddComment: React.FC<AddCommentProps> = ({ onAddComment, onEditComment, onDeleteComment, existingComment, isEditing, toggleEditingComment, toggleReplyingComment }) => {
+    const [commentText, setCommentText] = useState(existingComment && isEditing ? existingComment.data : '');
+    // const [isEditing, setIsEditing] = useState(!!existingComment);
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -34,11 +38,14 @@ const AddComment: React.FC<AddCommentProps> = ({ onAddComment, onEditComment, on
             onEditComment(existingComment.comment_id, commentText);
             console.log("done");
         } else {
-            onAddComment(commentText, null);
+            if (existingComment) {
+                onAddComment(commentText, existingComment.comment_id);
+            }
+            else onAddComment(commentText, null);
         }
         setIsDialogOpen(false);
         setCommentText('');
-        setIsEditing(false);
+        // setIsEditing(false);
     };
 
     const handleDelete = () => {
@@ -48,14 +55,15 @@ const AddComment: React.FC<AddCommentProps> = ({ onAddComment, onEditComment, on
     };
 
     function handleDialogToggle() {
+        toggleEditingComment ? toggleEditingComment() : (toggleReplyingComment ? toggleReplyingComment() : null);
         setIsDialogOpen(!isDialogOpen);
     }
 
     return (
-        <div className="text-text space-y-4">
+        <div className={'text-text space-y-4 ' + (isDialogOpen ? 'w-5/6' : '')}>
             <h2 className="font-semibold text-text">
-                <button className='font-xs' onClick={handleDialogToggle}>
-                    {isEditing ? 'Edit' : 'Add a Comment'}
+                <button className='font-xs underline' onClick={handleDialogToggle}>
+                    {isEditing ? 'Edit' : existingComment ? 'reply' : 'Add Comment'}
                 </button>
             </h2>
             {<form onSubmit={handleSubmit} className={`space-y-4 ${isDialogOpen ? '' : 'hidden'} transition duration-300`}>

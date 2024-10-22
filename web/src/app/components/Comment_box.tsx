@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { getCommentsByPostId, updateComment, deleteComment } from '../actions';
+import { getCommentsByPostId, updateComment, deleteComment, revalidateGivenPath } from '../actions';
 import AddComment from './AddComment';
 import CommentItem from './CommentItem';
+import { usePathname } from 'next/navigation';
 
 interface Comment {
     comment_id: string;
@@ -18,6 +19,7 @@ interface Comment {
 const CommentBox = ({ post_id }: { post_id: string }) => {
 
     const [comments, setComments] = useState<Comment[]>([]);
+    const pathname = usePathname();
 
     useEffect(() => {
         async function fetchComments() {
@@ -56,7 +58,11 @@ const CommentBox = ({ post_id }: { post_id: string }) => {
         if (!response) {
             alert("Failed to add comment");
         }
-        setComments((prevComments) => [...prevComments, response]);
+        else {
+            alert("added comment");
+            await revalidateGivenPath(pathname);
+        }
+        if (!reply_id) setComments((prevComments) => [...prevComments, response]);
     }
 
     async function onDeleteComment(comment_id: string) {
@@ -68,6 +74,7 @@ const CommentBox = ({ post_id }: { post_id: string }) => {
         } else {
             alert("deleted Comment");
             setComments((prevComments) => prevComments.filter((comment) => comment.comment_id !== comment_id));
+            await revalidateGivenPath(pathname);
         }
     }
 
@@ -79,6 +86,8 @@ const CommentBox = ({ post_id }: { post_id: string }) => {
             alert("Failed to edit comment");
         } else {
             alert("updated comment");
+            console.log(pathname);
+            await revalidateGivenPath(pathname);
         }
 
     }
@@ -86,14 +95,24 @@ const CommentBox = ({ post_id }: { post_id: string }) => {
     return (
         <div className="space-y-4">
             <h2 className="text-lg font-semibold text-text">Comments</h2>
-            <div className='bg-secondary px-3 py-1 text-white inline-block rounded'>
-                <AddComment onAddComment={onAddComment} onEditComment={onEditComment} onDeleteComment={onDeleteComment} />
+            <div className='px-3 py-1 text-white  rounded'>
+                <AddComment
+                    onAddComment={onAddComment}
+                    onEditComment={onEditComment}
+                    onDeleteComment={onDeleteComment}
+                />
             </div>
             {comments.length === 0 ? (
                 <p className="text-gray-500">No comments yet. Be the first to comment!</p>
             ) : (
                 comments.map((comment) => (
-                    <CommentItem key={comment.comment_id} comment={comment} onAddComment={onAddComment} onEditComment={onEditComment} onDeleteComment={onDeleteComment} />
+                    <CommentItem
+                        key={comment.comment_id}
+                        comment={comment}
+                        onAddComment={onAddComment}
+                        onEditComment={onEditComment}
+                        onDeleteComment={onDeleteComment}
+                    />
                 ))
             )}
         </div>
