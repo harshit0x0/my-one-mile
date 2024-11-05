@@ -32,7 +32,7 @@ function getStatusColor(status_id: number): string {
     return colors[status_id - 1] || 'bg-gray-500';
 }
 
-export default function PostDetails({ id }: { id: string }) {
+export default function PostDetails({ id, user }: { id: string, user: UserType | null }) {
     const [post, setPost] = useState<PostType | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -47,6 +47,7 @@ export default function PostDetails({ id }: { id: string }) {
                     throw new Error('Failed to fetch post');
                 }
                 const post = await JSON.parse(data);
+
                 setPost(post);
             } catch (err) {
                 setError('Failed to load post. Please try again later.');
@@ -56,7 +57,7 @@ export default function PostDetails({ id }: { id: string }) {
         }
 
         fetchPost();
-    }, [id]);
+    }, []);
 
     const handleLike = async () => {
         try {
@@ -65,6 +66,7 @@ export default function PostDetails({ id }: { id: string }) {
                 const updatedPost = JSON.parse(data) as PostType;
                 // @ts-ignore
                 setPost(prevPost => ({ ...prevPost, likes: updatedPost.likes }));
+                router.refresh();
             } else {
                 alert('Failed to like post');
             }
@@ -117,13 +119,18 @@ export default function PostDetails({ id }: { id: string }) {
                     Like
                 </button>
                 <span className="ml-2 text-sm  px-4 py-2 text-text bg-primary">Likes: {post.likes}</span>
-                <Link href={`/posts/${post.post_id}/edit`} className='text-primary hover:underline'> Edit post </Link>
-                <button
-                    onClick={handleDelete}
-                    className="bg-background text-text px-4 py-2 rounded hover:bg-opacity-90 transition duration-200 ml-2 hover:scale-105 "
-                >
-                    Delete
-                </button>
+                {
+                    // @ts-ignore
+                    (user && user.id === post.User.id || user?.badge == "Admin") && (<>
+                        <Link href={`/posts/${post.post_id}/edit`} className='text-primary hover:underline'> Edit post </Link>
+                        <button
+                            onClick={handleDelete}
+                            className="bg-background text-text px-4 py-2 rounded hover:bg-opacity-90 transition duration-200 ml-2 hover:scale-105 "
+                        >
+                            Delete
+                        </button>
+                    </>)
+                }
             </div >
             <button
                 onClick={() => router.push('/posts')}
@@ -131,7 +138,7 @@ export default function PostDetails({ id }: { id: string }) {
             >
                 Back to All Posts
             </button>
-            <CommentBox post_id={post.post_id} />
+            <CommentBox post_id={post.post_id} refreshKey={Date.now()} user={user} />
         </>
     );
 }

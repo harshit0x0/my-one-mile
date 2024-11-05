@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { getCommentsByPostId, updateComment, deleteComment, revalidateGivenPath } from '../actions';
 import AddComment from './AddComment';
 import CommentItem from './CommentItem';
-import { usePathname } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
+import { UserType } from '@/src/models/users';
 
 interface Comment {
     comment_id: string;
@@ -16,10 +17,11 @@ interface Comment {
 }
 
 
-const CommentBox = ({ post_id }: { post_id: string }) => {
+const CommentBox = ({ post_id, refreshKey, user }: { post_id: string, refreshKey: number, user: UserType | null }) => {
 
     const [comments, setComments] = useState<Comment[]>([]);
     const pathname = usePathname();
+    const router = useRouter();
 
     useEffect(() => {
         async function fetchComments() {
@@ -60,7 +62,9 @@ const CommentBox = ({ post_id }: { post_id: string }) => {
         }
         else {
             alert("added comment");
-            await revalidateGivenPath(pathname);
+            console.log("path: ", pathname);
+            await revalidateGivenPath('/posts/[id]');
+            router.push('/posts/' + post_id + '?refresh=' + Date.now());
         }
         if (!reply_id) setComments((prevComments) => [...prevComments, response]);
     }
@@ -74,7 +78,6 @@ const CommentBox = ({ post_id }: { post_id: string }) => {
         } else {
             alert("deleted Comment");
             setComments((prevComments) => prevComments.filter((comment) => comment.comment_id !== comment_id));
-            await revalidateGivenPath(pathname);
         }
     }
 
@@ -87,7 +90,6 @@ const CommentBox = ({ post_id }: { post_id: string }) => {
         } else {
             alert("updated comment");
             console.log(pathname);
-            await revalidateGivenPath(pathname);
         }
 
     }
@@ -109,6 +111,7 @@ const CommentBox = ({ post_id }: { post_id: string }) => {
                     <CommentItem
                         key={comment.comment_id}
                         comment={comment}
+                        user={user ?? null}
                         onAddComment={onAddComment}
                         onEditComment={onEditComment}
                         onDeleteComment={onDeleteComment}

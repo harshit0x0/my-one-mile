@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { deleteActivity, getActivity } from '../actions';
 import Link from 'next/link';
+import { UserType } from '@/src/models/users';
 
 interface Activity {
     activity_id: string;
@@ -31,7 +32,7 @@ function getStatusColor(status_id: number): string {
     return colors[status_id - 1] || 'bg-gray-500';
 }
 
-export default function ActivityDetails({ id }: { id: string }) {
+export default function ActivityDetails({ id, user }: { id: string, user: UserType | null }) {
     const [activity, setActivity] = useState<Activity | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -47,6 +48,7 @@ export default function ActivityDetails({ id }: { id: string }) {
                 }
                 const activity = JSON.parse(data);
                 setActivity(activity);
+                console.log(user);
             } catch (err) {
                 setError('Failed to load activity. Please try again later.');
             } finally {
@@ -88,10 +90,16 @@ export default function ActivityDetails({ id }: { id: string }) {
                 <p className="mb-4 text-text"><strong>Location:</strong> {activity.location}</p>
                 {/* @ts-ignore */}
                 <p className="mb-4 text-sm text-text">Created by {activity.User.name} on {new Date(activity.createdAt).toLocaleDateString()}</p>
-                <Link href={`/activity/${activity.activity_id}/edit`} className='text-primary hover:underline'> Edit Activity </Link>
-                <button onClick={handleDelete} className="bg-primary text-white px-4 mt-4 py-2 rounded hover:bg-opacity-90 transition duration-200">
-                    Delete Activity
-                </button>
+                {
+                    (user?.id === activity.createdBy || user?.badge == "Admin") && (
+                        <>
+                            <Link href={`/activity/${activity.activity_id}/edit`} className='text-primary hover:underline'> Edit Activity </Link>
+                            <button onClick={handleDelete} className="bg-primary text-white px-4 mt-4 py-2 rounded hover:bg-opacity-90 transition duration-200">
+                                Delete Activity
+                            </button>
+                        </>
+                    )
+                }
             </div>
             <button
                 onClick={() => router.push('/activity')}

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import AddComment from './AddComment';
+import { UserType } from '@/src/models/users';
 interface Comment {
     comment_id: string;
     data: string;
@@ -13,12 +14,13 @@ interface Comment {
 
 interface CommentProps {
     comment: Comment;
+    user: UserType | null;
     onAddComment: (data: string, reply_id: string | null) => void;
     onEditComment: (comment_id: string, text: string) => void;
     onDeleteComment: (comment_id: string) => void;
 }
 
-export default function CommentItem({ comment, onAddComment, onEditComment, onDeleteComment }: CommentProps) {
+export default function CommentItem({ comment, onAddComment, onEditComment, onDeleteComment, user }: CommentProps) {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [isEditingComment, setIsEditingComment] = useState(false);
     const [isReplyingComment, setIsReplyingComment] = useState(false);
@@ -46,7 +48,7 @@ export default function CommentItem({ comment, onAddComment, onEditComment, onDe
                             </div>
                             <div className='ml-8 space-x-3 w-full flex'>
                                 {/* edit comment */}
-                                {!isReplyingComment &&
+                                {!isReplyingComment && (user?.id === comment.created_by || user?.badge === 'Admin') &&
                                     <AddComment
                                         isEditing={true}
                                         toggleEditingComment={toggleEditingComment}
@@ -84,6 +86,7 @@ export default function CommentItem({ comment, onAddComment, onEditComment, onDe
                     {comment.replies.map((reply) => (
                         <CommentItem
                             key={reply.comment_id}
+                            user={user}
                             comment={reply}
                             onAddComment={onAddComment}
                             onEditComment={onEditComment}
@@ -92,8 +95,6 @@ export default function CommentItem({ comment, onAddComment, onEditComment, onDe
                     ))}
                 </div>
             )}
-
-            {/* Add Comment */}
 
         </div>
     );

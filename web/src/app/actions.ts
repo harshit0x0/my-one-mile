@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { UserType } from "../models/users";
 import { authUser } from "../auth/authUser";
 import { ImageType } from "../models/images";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { LocationType } from "../models/location";
 import { Location, Activity, Post, User, Comment } from "../models/index";
 import { CommentModel } from "../models/comments";
@@ -97,7 +97,7 @@ export async function getCity(location_id: string) {
 }
 
 export async function revalidateGivenPath(path: string) {
-    revalidatePath(path);
+    revalidatePath(path, "page");
 }
 
 export const getActivities = async () => {
@@ -172,6 +172,10 @@ export const updateActivity = async (id: string, data: any) => {
         // location does not come right from edit form
         data = { ...data, location: activity.location };
 
+        const user = await getUser();
+        if (user?.id != activity.createdBy && user?.badge != 'Admin') {
+            throw new Error('You are not authorized to update this activity');
+        }
         await activity.update(data);
         return true;
     } catch (error) {
@@ -290,6 +294,10 @@ export const updatePost = async (id: string, data: any) => {
         if (!post) {
             return null;
         }
+        const user = await getUser();
+        if (user?.id != post.user_id && user?.badge != 'Admin') {
+            throw new Error('You are not authorized to update this post');
+        }
         await post.update(data);
         return true;
     } catch (error) {
@@ -317,8 +325,8 @@ const getAllReplies: any = (reply_id: string, comments: CommentModel[]) => {
 
 export const getCommentsByPostId = async (post_id: string) => {
     try {
+        console.log("GET COMMENTS BY POST ID", post_id);
         const AllComments = await Comment.findAll({ where: { post_id: post_id } });
-        // console.log("all comments, ", AllComments);
         const comments = AllComments
             .filter((comment) => comment.dataValues.reply_id == null)
             .map((comment) => {
@@ -328,6 +336,7 @@ export const getCommentsByPostId = async (post_id: string) => {
                 };
             });
         // console.log("filtered comments", comments);
+        revalidateTag('/posts');
         return JSON.stringify(comments);
     } catch (error) {
         console.error('\nError fetching comments\n');
@@ -342,6 +351,10 @@ export const updateComment = async (text: string, id: string) => {
         const comment = await Comment.findByPk(id);
         if (!comment) {
             return null;
+        }
+        const user = await getUser();
+        if (user?.id != comment.created_by && user?.badge != 'Admin') {
+            throw new Error('You are not authorized to update this comment');
         }
         await comment.update({ data: text });
         return true;

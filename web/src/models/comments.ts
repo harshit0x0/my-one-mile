@@ -45,6 +45,7 @@ export const Comment = sequelize.define<CommentModel>('Comment', {
             model: 'Comment',
             key: 'comment_id',
         },
+        onDelete: 'CASCADE',
     },
     createdAt: {
         type: DataTypes.DATE,

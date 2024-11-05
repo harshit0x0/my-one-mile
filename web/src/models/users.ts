@@ -10,6 +10,7 @@ interface UserModel extends Model<InferAttributes<UserModel>, InferCreationAttri
     dob: Date | null;
     image_id: string | null;
     location: string | null;
+    badge: string | null;
 }
 
 export const User = sequelize.define<UserModel>('User', {
@@ -37,6 +38,9 @@ export const User = sequelize.define<UserModel>('User', {
     },
     location: {
         type: DataTypes.STRING,
+    },
+    badge: {
+        type: DataTypes.STRING,
     }
 }, {
     tableName: 'users',
@@ -54,4 +58,5 @@ export interface UserType {
     dob: Date | null;
     role_id: number;
     image_id: string | null;
+    badge: string | null;
 }

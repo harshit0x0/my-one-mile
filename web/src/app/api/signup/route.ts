@@ -8,7 +8,6 @@ export async function POST(request: Request) {
         console.log('Received POST request');
         const body = await request.json();
         const { email, password, confirmPassword } = body;
-
         if (password.length < 8 || password.length > 12) {
             return new Response('Password must be between 8 and 12 characters', { status: 400 });
         }
