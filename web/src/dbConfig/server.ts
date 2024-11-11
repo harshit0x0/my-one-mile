@@ -5,15 +5,15 @@ const { DB_NAME: database, DB_USERNAME: username, DB_PASSWORD: password, DB_HOST
 if (database == null || username == null || password == null || host == null) {
     throw new Error('DB config not set');
 }
-// export const db = new Sequelize(database, username, password, { dialect: 'mssql', dialectModule: tedious, host: host });
+export const db = new Sequelize(database, username, password, { dialect: 'mssql', dialectModule: tedious, host: host });
 
 // mysql
-export const db = new Sequelize('myonemile', 'root', process.env.LOCAL_DB_PASSWORD, {
-    dialect: 'mysql',
-    host: 'localhost',
-    port: 3306,
-    dialectModule: require('mysql2')
-});
+// export const db = new Sequelize('myonemile', 'root', process.env.LOCAL_DB_PASSWORD, {
+//     dialect: 'mysql',
+//     host: 'localhost',
+//     port: 3306,
+//     dialectModule: require('mysql2')
+// });
 
 
 

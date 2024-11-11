@@ -37,7 +37,6 @@ const CreateActivityPage = () => {
         const fetchLocation = async () => {
             let user = await getUser();
             let location = await getCity(user?.location ?? '');
-            console.log(location);
             setFormData(prev => ({ ...prev, location: location ?? '' }));
         };
         fetchLocation();
@@ -85,6 +84,7 @@ const CreateActivityPage = () => {
     return (
         <div className="max-w-2xl mx-auto p-6 bg-background text-text">
             <h1 className="text-3xl font-bold mb-6 text-primary">Create New Activity</h1>
+            {!formData.location && <em className="text-gray-500">Please set your location before creating an activity</em>}
             <form onSubmit={handleSubmit} className="space-y-4">
                 {/* location */}
                 <div>

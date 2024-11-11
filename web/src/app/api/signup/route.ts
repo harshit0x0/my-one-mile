@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
         const id = uuidv4();
         const hashedPassword = await encryptPassword(password);
-        const userRole = await (Role.findAll({ where: { role: 'user' } }));
+        const userRole = await (Role.findAll({ where: { role: "user" } }));
         const user = await User.create({ id, email, password: hashedPassword, role_id: userRole[0].role_id });
         return new Response(JSON.stringify(user), { status: 201 });
     } catch (e) {

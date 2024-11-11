@@ -19,8 +19,8 @@ export default function ActivityItem({ activity }: { activity: ActivityModel }) 
             <div className='flex justify-between'>
                 <h2 className="text-2xl font-semibold text-background mb-2">{activity.title}</h2>
                 <div className="flex space-x-3 mb-3">
-                    <span className="text-sm px-2 py-1  bg-white text-secondary_accent">{activityTypes[activity.type_id - 1]}</span>
-                    <span className={`px-2 py-1 rounded text-xs text-white ${getStatusColor(activity.status_id)}`}>
+                    <span className="text-sm max-h-8 px-2 py-1 bg-white text-secondary_accent">{activityTypes[activity.type_id - 1]}</span>
+                    <span className={`px-2 max-h-8 py-1 rounded text-xs text-white ${getStatusColor(activity.status_id)}`}>
                         {activityStatuses[activity.status_id - 1]}
                     </span>
                 </div>

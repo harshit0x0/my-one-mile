@@ -106,7 +106,7 @@ export default function ActivityDetails({ id, user }: { id: string, user: UserTy
                     (user?.id === activity.createdBy || user?.badge == "Admin") && (
                         <>
                             <Link href={`/activity/${activity.activity_id}/edit`} className='text-primary hover:underline'> Edit Activity </Link>
-                            <button onClick={handleDelete} className="bg-primary text-white px-4 mt-4 py-2 rounded hover:bg-opacity-90 transition duration-200">
+                            <button onClick={handleDelete} className="bg-primary text-white lg:px-4 mx-3 mt-4 py-2 rounded hover:bg-opacity-90 transition duration-200">
                                 Delete Activity
                             </button>
                         </>

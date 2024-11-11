@@ -53,8 +53,14 @@ const posts = () => {
     return (
         <div className="max-w-4xl mx-auto p-6 bg-background text-text">
             <h1 className="text-3xl font-bold mb-6 text-text">All Posts</h1>
+            <div className="mb-10 bg-background shadow-2xl lg:ml-7 px-4 py-5 rounded-lg">
+                Welcome to the discussion space related to various activities and issues. Join the conversation and share your thoughts, ideas, and experiences.
+                <br />
+                To create a post, create a new activity!
+            </div>
 
             <div className="mb-6 flex space-x-4">
+                <div className="font-semibold my-auto">Filters:</div>
                 <input
                     type="text"
                     placeholder="Search posts..."

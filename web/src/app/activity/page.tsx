@@ -8,21 +8,24 @@ import { ActivityModel } from '@/src/models/activity';
 const ActivityHomepage: React.FC = () => {
 
     const [recentActivities, setRecentActivities] = useState<ActivityModel[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchActivities = async () => {
+            setLoading(true);
             const activities = await getRecentActivities();
             if (!activities) return;
             const data = await JSON.parse(activities) as ActivityModel[];
             setRecentActivities(data);
+            setLoading(false);
         };
         fetchActivities();
     }, []);
 
     return (
-        <div className="max-w-5xl my-auto mx-auto min-h-screen py-6 p-6 bg-background text-text">
+        <div className="max-w-5xl my-auto mx-auto min-h-screen py-6 px-2 md:px-6 bg-background text-text">
             <h1 className="text-3xl font-bold mb-4 text-text">Activities</h1>
-            <p className="mb-4 bg-background shadow-2xl ml-7 px-4 py-5 rounded-lg">
+            <div className="mb-4 bg-background shadow-2xl lg:ml-7 px-4 py-5 rounded-lg">
                 Activities are issues that people take charge of solving. This involves reporting to concerned authorities, providing relevant updates etc.
                 These can also be fundraisers for an emergency.<br />
                 <div className="p-4 rounded-lg my-6 bg-gradient-to-r from-secondary_accent to-secondary py-6">
@@ -41,11 +44,13 @@ const ActivityHomepage: React.FC = () => {
                         </Link>
                     </div>
                 </div>
-            </p>
+            </div>
 
-            <div className='max-w-4xl ml-6 mt-5'>
+            <div className='max-w-4xl md:ml-6 mt-5'>
                 <h2 className="font-semibold my-4">Recent activity</h2>
-                <div className='bg-background shadow-2xl text-text px-8 pt-8 pb-3 rounded-lg'>
+                <div className='bg-background shadow-2xl text-text md:px-8 pt-8 pb-3 rounded-lg'>
+                    {loading && <p>Loading...</p>}
+                    {!loading && recentActivities.length === 0 && <p className='text-text'>No recent activities yet</p>}
                     {recentActivities.map((activity) => (
                         <Link key={activity.activity_id} href={`/activity/${activity.activity_id}`}>
                             <ActivityItem key={activity.activity_id} activity={activity} />
