@@ -47,7 +47,7 @@ export default function PostDetails({ id, user }: { id: string, user: UserType |
                     throw new Error('Failed to fetch post');
                 }
                 const post = await JSON.parse(data);
-
+                console.log(post);
                 setPost(post);
             } catch (err) {
                 setError('Failed to load post. Please try again later.');
@@ -96,41 +96,64 @@ export default function PostDetails({ id, user }: { id: string, user: UserType |
     return (
         <>
             <div className="bg-secondary rounded-lg shadow-lg p-6 transition duration-300 ease-in-out hover:shadow-xl">
-                <h1 className="text-3xl font-bold mb-4 text-primary">{post.title}</h1>
-                <div className="mb-4">
-                    <span className={`px-2 py-1 rounded text-sm text-white ${getStatusColor(post.status_id)}`}>
-                        {getStatusString(post.status_id)}
-                    </span>
-                    <span className="ml-2 text-sm text-secondary_accent">Likes: {post.likes}</span>
+                <div className='flex justify-between'>
+                    <div>
+                        {/* @ts-ignore */}
+                        <p className='font-bold mb-2'>{post.activity.Location.block}</p>
+                        <h1 className="text-3xl font-bold mb-4 text-primary">{post.title}</h1>
+                        <div className="mb-4">
+                            <span className={`px-2 py-1 rounded text-sm text-white ${getStatusColor(post.status_id)}`}>
+                                {getStatusString(post.status_id)}
+                            </span>
+                        </div>
+                        <p className="mb-4 text-text">{post.data}</p>
+                        <p className="mb-4 text-text"><strong>Related Activity: </strong>
+                            <Link className='text-primary hover:underline' href={`/activity/${post.activity.activity_id}`}>{post.activity.title}</Link>
+                        </p>
+                        {/* @ts-ignore */}
+                        <p className="mb-4 text-sm text-text">Created by {post.User.name} on {new Date(post.createdAt).toLocaleDateString()}</p>
+                        {post.updatedAt !== post.createdAt && (
+                            <p className="mb-4 text-sm text-text">Updated on {new Date(post.updatedAt).toLocaleDateString()}</p>
+                        )}
+                    </div>
+                    <div className="max-w-20 text-center">
+                        <img
+                            // @ts-ignore
+                            src={post.User.Image.url}
+                            alt="profile-picture"
+                            className="rounded-full mx-auto h-10 w-10 max-h-10 "
+                        />
+                        {/* @ts-ignore */}
+                        <p className="mb-4 text-sm font-semibold">{post.User.name}</p>
+                    </div>
                 </div>
-                <p className="mb-4 text-text">{post.data}</p>
-                <p className="mb-4 text-text"><strong>Related Activity: </strong>
-                    <Link className='text-primary hover:underline' href={`/activity/${post.activity.activity_id}`}>{post.activity.title}</Link>
-                </p>
-                {/* @ts-ignore */}
-                <p className="mb-4 text-sm text-text">Created by {post.User.name} on {new Date(post.createdAt).toLocaleDateString()}</p>
-                {post.updatedAt !== post.createdAt && (
-                    <p className="mb-4 text-sm text-text">Updated on {new Date(post.updatedAt).toLocaleDateString()}</p>
-                )}
-                <button
-                    onClick={handleLike}
-                    className="bg-background text-text px-4 py-2 rounded hover:bg-opacity-90 transition duration-200 ml-2 hover:scale-105 "
-                >
-                    Like
-                </button>
-                <span className="ml-2 text-sm  px-4 py-2 text-text bg-primary">Likes: {post.likes}</span>
-                {
-                    // @ts-ignore
-                    (user && user.id === post.User.id || user?.badge == "Admin") && (<>
-                        <Link href={`/posts/${post.post_id}/edit`} className='text-primary hover:underline'> Edit post </Link>
+                <div className='flex justify-between'>
+                    <div>
                         <button
-                            onClick={handleDelete}
+                            onClick={handleLike}
                             className="bg-background text-text px-4 py-2 rounded hover:bg-opacity-90 transition duration-200 ml-2 hover:scale-105 "
                         >
-                            Delete
+                            Like
                         </button>
-                    </>)
-                }
+                        <span className="ml-2 text-sm  px-4 py-2 text-text bg-primary">Likes: {post.likes}</span>
+                    </div>
+                    <div>
+                        {
+                            // @ts-ignore
+                            (user && user.id === post.User.id || user?.badge == "Admin") && (<>
+                                <Link href={`/posts/${post.post_id}/edit`} className='text-primary hover:underline'> Edit post </Link>
+                                <button
+                                    onClick={handleDelete}
+                                    className="bg-background text-text px-4 py-2 rounded hover:bg-opacity-90 transition duration-200 ml-2 hover:scale-105 "
+                                >
+                                    Delete
+                                </button>
+                            </>)
+                        }
+
+                    </div>
+
+                </div>
             </div >
             <button
                 onClick={() => router.push('/posts')}

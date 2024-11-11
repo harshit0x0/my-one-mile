@@ -6,7 +6,7 @@ import { authUser } from "../auth/authUser";
 import { ImageType } from "../models/images";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { LocationType } from "../models/location";
-import { Location, Activity, Post, User, Comment } from "../models/index";
+import { Location, Activity, Post, User, Comment, Image } from "../models/index";
 import { CommentModel } from "../models/comments";
 
 
@@ -102,12 +102,25 @@ export async function revalidateGivenPath(path: string) {
 
 export const getActivities = async () => {
     try {
-        const activities = await Activity.findAll({ include: Location });
+        const activities = await Activity.findAll({
+            include: [
+                Location,
+                {
+                    model: User,
+                    attributes: ['name', 'id'],
+                    include: [{
+                        model: Image,
+                        attributes: ['url']
+                    }]
+                },
+            ]
+        });
         const data = activities.map((activity) => {
             return {
                 ...activity.dataValues,
                 // @ts-ignore
                 location: activity.dataValues.Location.dataValues.city,
+                // @ts-ignore
                 Location: null
             };
         });
@@ -116,13 +129,25 @@ export const getActivities = async () => {
         console.error('\nError fetching all activities\n');
         // @ts-ignore
         console.error(error.original);
+        // console.log(error);
         return null;
     }
 };
 
 export const getRecentActivities = async () => {
     try {
-        const activities = await Activity.findAll({ limit: 5, include: Location, order: [['createdAt', 'DESC']] });
+        const activities = await Activity.findAll({
+            limit: 5,
+            include: [
+                Location,
+                {
+                    model: User,
+                    attributes: ['name', 'id'],
+                }
+            ],
+
+            order: [['createdAt', 'DESC']]
+        });
         const data = activities.map((activity) => {
             return {
                 ...activity.dataValues,
@@ -144,7 +169,15 @@ export const getActivity = async (id: string) => {
     try {
         const activity = await Activity.findByPk(id, {
             include: [
-                { model: Location }, { model: User, attributes: ['name', 'id'] }
+                { model: Location },
+                {
+                    model: User,
+                    attributes: ['name', 'id'],
+                    include: [{
+                        model: Image,
+                        attributes: ['url']
+                    }]
+                }
             ]
         });
         const data = {
@@ -210,9 +243,13 @@ export const getPosts = async () => {
                 model: Activity,
                 include: [{
                     model: Location
-                }, {
-                    model: User,
-                    attributes: ['name', 'id']
+                }]
+            }, {
+                model: User,
+                attributes: ['name', 'id'],
+                include: [{
+                    model: Image,
+                    attributes: ['url']
                 }]
             }],
             order: [['createdAt', 'DESC']]
@@ -239,7 +276,7 @@ export const getPost = async (id: string) => {
         const post = await Post.findByPk(id, {
             include: [
                 { model: Activity, include: [{ model: Location }, { model: User, attributes: ['name', 'id'] }] },
-                { model: User, attributes: ['name', 'id'] }
+                { model: User, attributes: ['name', 'id'], include: [{ model: Image, attributes: ['url'] }] }
             ]
         });
         const data = {
@@ -326,7 +363,10 @@ const getAllReplies: any = (reply_id: string, comments: CommentModel[]) => {
 export const getCommentsByPostId = async (post_id: string) => {
     try {
         console.log("GET COMMENTS BY POST ID", post_id);
-        const AllComments = await Comment.findAll({ where: { post_id: post_id } });
+        const AllComments = await Comment.findAll({
+            where: { post_id: post_id },
+            include: [{ model: User, attributes: ['name', 'id'], include: [{ model: Image, attributes: ['url'] }] }]
+        });
         const comments = AllComments
             .filter((comment) => comment.dataValues.reply_id == null)
             .map((comment) => {

@@ -86,7 +86,7 @@ const AddComment: React.FC<AddCommentProps> = ({ onAddComment, onEditComment, on
                 <div className="flex justify-between items-center">
                     <button
                         type="submit"
-                        className="bg-primary text-white px-4 py-2 rounded hover:bg-opacity-90 transition duration-200"
+                        className="bg-primary text-white px-4 py-2 rounded hover:bg-opacity-90 transition duration-200 mb-5"
                     >
                         {isEditing ? 'Update Comment' : 'Add Comment'}
                     </button>
@@ -95,7 +95,7 @@ const AddComment: React.FC<AddCommentProps> = ({ onAddComment, onEditComment, on
                         <button
                             type="button"
                             onClick={handleDelete}
-                            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-opacity-90 transition duration-200"
+                            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-opacity-90 transition duration-200 mb-5"
                         >
                             Delete Comment
                         </button>

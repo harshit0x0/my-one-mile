@@ -3,6 +3,9 @@ import { Activity } from "./activity";
 import { Post } from "./posts";
 import { User } from "./users";
 import { Comment } from "./comments";
+import { Image } from "./images";
+
+User.belongsTo(Image, { foreignKey: 'image_id' });
 
 User.hasMany(Activity, { foreignKey: 'createdBy' });
 Activity.belongsTo(User, { foreignKey: 'createdBy' });
@@ -25,4 +28,4 @@ Comment.belongsTo(User, { foreignKey: 'created_by' });
 // Comment.hasMany(Comment, { foreignKey: 'reply_id', onDelete: 'cascade' });
 // Comment.belongsTo(Comment, { foreignKey: 'reply_id' });
 
-export { Location, Activity, Post, User, Comment };
+export { Location, Activity, Post, User, Comment, Image };

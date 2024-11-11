@@ -21,6 +21,9 @@ const config: Config = {
         text: 'var(--color-text)',
         secondary_accent: 'var(--color-secondary-accent)',
       },
+      scale: {
+        175: '1.75'
+      },
     },
   },
   plugins: [],

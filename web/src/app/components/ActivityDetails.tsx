@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { deleteActivity, getActivity } from '../actions';
 import Link from 'next/link';
 import { UserType } from '@/src/models/users';
+import Image from 'next/image'
 
 interface Activity {
     activity_id: string;
@@ -15,6 +16,7 @@ interface Activity {
     title: string;
     createdBy: string;
     createdAt: Date;
+    User: any;
 }
 
 function getTypeString(type_id: number): string {
@@ -48,7 +50,7 @@ export default function ActivityDetails({ id, user }: { id: string, user: UserTy
                 }
                 const activity = JSON.parse(data);
                 setActivity(activity);
-                console.log(user);
+                console.log(activity);
             } catch (err) {
                 setError('Failed to load activity. Please try again later.');
             } finally {
@@ -79,15 +81,25 @@ export default function ActivityDetails({ id, user }: { id: string, user: UserTy
     return (
         <>
             <div className="bg-secondary rounded-lg shadow-lg p-6 transition duration-300 ease-in-out hover:shadow-xl">
-                <h1 className="text-3xl font-bold mb-4 text-primary">{activity.title}</h1>
-                <div className="mb-4">
-                    <span className={`px-2 py-1 rounded text-sm text-white ${getStatusColor(activity.status_id)}`}>
-                        {getStatusString(activity.status_id)}
-                    </span>
-                    <span className="ml-2 text-sm text-secondary_accent">{getTypeString(activity.type_id)}</span>
+                <div className='flex justify-between'>
+                    <div>
+                        <h1 className="text-3xl font-bold mb-4 text-primary">{activity.title}</h1>
+                        <div className="mb-4">
+                            <span className={`px-2 py-1 rounded text-sm text-white ${getStatusColor(activity.status_id)}`}>
+                                {getStatusString(activity.status_id)}
+                            </span>
+                            <span className="ml-2 text-sm px-2 py-1 text-text rounded bg-background">{getTypeString(activity.type_id)}</span>
+                        </div>
+                        <p className="mb-4 text-text">{activity.description}</p>
+                        <p className="mb-4 text-text"><strong>Location:</strong> {activity.location}</p>
+                    </div>
+                    <img
+                        src={activity.User.Image.url}
+                        alt="profile-picture"
+                        className="rounded-full h-20 w-20 max-h-20 "
+                    />
+
                 </div>
-                <p className="mb-4 text-text">{activity.description}</p>
-                <p className="mb-4 text-text"><strong>Location:</strong> {activity.location}</p>
                 {/* @ts-ignore */}
                 <p className="mb-4 text-sm text-text">Created by {activity.User.name} on {new Date(activity.createdAt).toLocaleDateString()}</p>
                 {

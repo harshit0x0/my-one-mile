@@ -18,6 +18,7 @@ const AllActivitiesPage: React.FC = () => {
             const tempActivities = await getActivities();
             if (!tempActivities) return;
             const data = await JSON.parse(tempActivities) as ActivityModel[];
+            console.log("all activities: ", data);
             setActivities(data ?? []);
         };
 
@@ -34,8 +35,8 @@ const AllActivitiesPage: React.FC = () => {
     }, [activities, searchTerm, locationFilter]);
 
     return (
-        <div className="max-w-4xl mx-auto p-6 bg-background text-text">
-            <h1 className="text-3xl font-bold mb-6 text-primary">All Activities</h1>
+        <div className="max-w-4xl mx-auto py-6 bg-background text-text">
+            <h1 className="text-3xl font-bold mb-6 text-text">All Activities</h1>
 
             <div className="mb-6 flex space-x-4">
                 <input
@@ -63,7 +64,7 @@ const AllActivitiesPage: React.FC = () => {
                     <p className="text-center text-gray-500">No activities found.</p>
                 ) : (
                     filteredActivities.map(activity => (
-                        <Link href={`/activity/${activity.activity_id}`}>
+                        <Link key={activity.activity_id} href={`/activity/${activity.activity_id}`}>
                             <ActivityItem key={activity.activity_id} activity={activity} />
                         </Link>
                     ))

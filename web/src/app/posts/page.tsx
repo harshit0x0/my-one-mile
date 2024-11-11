@@ -52,7 +52,7 @@ const posts = () => {
 
     return (
         <div className="max-w-4xl mx-auto p-6 bg-background text-text">
-            <h1 className="text-3xl font-bold mb-6 text-primary">All Posts</h1>
+            <h1 className="text-3xl font-bold mb-6 text-text">All Posts</h1>
 
             <div className="mb-6 flex space-x-4">
                 <input

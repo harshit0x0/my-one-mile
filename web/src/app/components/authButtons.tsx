@@ -53,7 +53,7 @@ export default function AuthButtons({ user }: { user: UserType | null }) {
                             Posts
                         </Link>
                         <Link className="text-text text-center hover:underline rounded w-32 px-8 md:w-auto md:px-2 py-3 md:w-18" href="/activity">
-                            Activity
+                            Activities
                         </Link>
                         <button className="text-text text-center hover:underline rounded w-32 px-8 md:w-auto md:px-2 py-3 md:w-18" onClick={changeTheme}>
                             Theme

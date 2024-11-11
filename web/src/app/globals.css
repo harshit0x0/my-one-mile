@@ -8,11 +8,16 @@
 
 @layer base {
     :root {
-        --color-primary: #ff9800;
-        --color-secondary: #7e57c2;
-        --color-secondary-accent: #5e35b1;
-        --color-background: #e4d1ff;
-        --color-text: #ffffff;
+        --color-primary: #f8aa67;
+        /* Muted Warm Amber */
+        --color-secondary: #B57F5F;
+        /* Warm Taupe */
+        --color-secondary-accent: #A37A63;
+        /* Muted Sienna */
+        --color-background: #F4F4F2;
+        /* Soft Off-White */
+        --color-text: #2D2D2D;
+        /* Dark Charcoal */
 
         font-family: "Open Sans", sans-serif;
     }
@@ -20,17 +25,43 @@
 }
 
 .theme-light {
-    --color-primary: #ff9800;
-    --color-secondary: #7e57c2;
-    --color-secondary-accent: #512a9f;
-    --color-background: #f0e6ff;
-    --color-text: #000000;
+    --color-primary: #ff9437;
+    --color-secondary: #634eda;
+    --color-secondary-accent: #452ec7;
+    --color-background: #F4F4F2;
+    --color-text: #1c1c1c;
 }
 
 .theme-dark {
-    --color-primary: #ff8902;
-    --color-secondary: #5722b1;
-    --color-secondary-accent: #6032af;
-    --color-background: #8080a4;
-    --color-text: #ffffff;
+    --color-primary: #ff8419;
+    /* Soft Bronze */
+    --color-secondary: #5e3fbd;
+    /* Rich Clay */
+    --color-secondary-accent: #7b57e7;
+    /* Muted Russet */
+    --color-background: #313131;
+    /* Charcoal Black */
+    --color-text: #eaeaea;
+    /* Soft Light Gray */
+}
+
+/* Additional Standard Colors */
+.success {
+    --color-success: #6A9B7B;
+    /* Desaturated Green */
+}
+
+.warning {
+    --color-warning: #D4A14E;
+    /* Warm Honey */
+}
+
+.error {
+    --color-error: #A8575A;
+    /* Muted Crimson */
+}
+
+.info {
+    --color-info: #5C8DAB;
+    /* Dusty Blue */
 }

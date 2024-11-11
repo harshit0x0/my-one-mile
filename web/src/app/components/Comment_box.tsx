@@ -14,6 +14,7 @@ interface Comment {
     reply_id: string | null;
     created_by: string;
     replies?: Comment[];
+    user: any
 }
 
 
@@ -42,6 +43,11 @@ const CommentBox = ({ post_id, refreshKey, user }: { post_id: string, refreshKey
 
     async function onAddComment(data: string, reply_id: string | null) {
         //create the comment and save to the database
+        if (!user) {
+            alert("You must be logged in to comment");
+            router.push('/login');
+            return;
+        }
         console.log("adding comment: " + data);
         const res = await fetch('/api/comments/new', {
             method: 'POST',

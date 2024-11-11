@@ -10,6 +10,7 @@ interface Comment {
     created_by: string;
     reply_id: string | null;
     replies?: Comment[];
+    user: any;
 }
 
 interface CommentProps {
@@ -24,7 +25,6 @@ export default function CommentItem({ comment, onAddComment, onEditComment, onDe
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [isEditingComment, setIsEditingComment] = useState(false);
     const [isReplyingComment, setIsReplyingComment] = useState(false);
-
     const toggleCollapse = () => setIsCollapsed(!isCollapsed);
     const toggleEditingComment = () => setIsEditingComment(!isEditingComment);
     const toggleReplyingComment = () => setIsReplyingComment(!isReplyingComment);
@@ -32,52 +32,65 @@ export default function CommentItem({ comment, onAddComment, onEditComment, onDe
     return (
         <div className="space-y-2 ml-4">
             {/* Comment Display */}
-            <div className="p-2 border border-secondary rounded bg-purple-300 text-text transition-all duration-200">
-                <div className="flex items-center">
-                    <div className='flex justify-between w-full'>
-                        <div className='flex flex-col w-full'>
-                            <div className='flex'>
-                                <button
-                                    onClick={toggleCollapse}
-                                    className="text-secondary mr-4 bg-gray-400 px-1 w-8 py-0 rounded rounded-full text-4xl hover:opacity-80"
-                                >
-                                    {isCollapsed ? '+' : '-'}
-                                </button>
-                                <p className="my-auto">{comment.data}</p>
+            <div className="px-2 border border-secondary rounded bg-secondary text-text transition-all duration-200">
+                <div className='flex space-x-4 py-0 w-full'>
 
-                            </div>
-                            <div className='ml-8 space-x-3 w-full flex'>
-                                {/* edit comment */}
-                                {!isReplyingComment && (user?.id === comment.created_by || user?.badge === 'Admin') &&
-                                    <AddComment
-                                        isEditing={true}
-                                        toggleEditingComment={toggleEditingComment}
-                                        existingComment={comment}
-                                        onAddComment={onAddComment}
-                                        onEditComment={onEditComment}
-                                        onDeleteComment={onDeleteComment}
-                                    />}
-                                {/* reply */}
-                                {!isEditingComment &&
-                                    <AddComment
-                                        isEditing={false}
-                                        toggleReplyingComment={toggleReplyingComment}
-                                        existingComment={comment}
-                                        onAddComment={onAddComment}
-                                        onEditComment={onEditComment}
-                                        onDeleteComment={onDeleteComment}
-                                    />}
-                            </div>
+                    {/* profile-pic and collapse button */}
+                    <div className='text-center my-2 pr-2 border-r-2 border-secondary'>
+                        <div className="max-w-20 text-center">
+                            <img
+                                // @ts-ignore
+                                src={comment.User.Image.url}
+                                alt="profile-picture"
+                                className="rounded-full mx-auto h-8 w-8 max-h-8 "
+                            />
+                            {/* @ts-ignore */}
+                            <p className="text-xs text-background font-semibold">{comment.User.name}</p>
                         </div>
-                        <div className='flex flex-col my-auto space-y-2'>
-                            <button className='bg-primary text-sm px-3 py-1'>Like</button>
-                            <span className="text-xs text-text">Likes: {comment.likes}</span>
+                        <button
+                            onClick={toggleCollapse}
+                            className="text-background max-h-10 px-3 font-bold  rounded-full hover:opacity-80"
+                        >
+                            {isCollapsed ? '+' : '-'}
+                            {/* {isCollapsed ? '⬎' : '⬑'} */}
+                        </button>
+                    </div>
+
+                    {/* comment and reply/edit  */}
+                    <div className='w-full px-1 pt-1 space-y-4 mb-0  mt-2'>
+                        <div className='flex w-full justify-between'>
+                            <div className="my-auto">{comment.data}</div>
+                        </div>
+                        <div className='space-x-3 w-full flex'>
+                            {/* edit comment */}
+                            {!isReplyingComment && (user?.id === comment.created_by || user?.badge === 'Admin') &&
+                                <AddComment
+                                    isEditing={true}
+                                    toggleEditingComment={toggleEditingComment}
+                                    existingComment={comment}
+                                    onAddComment={onAddComment}
+                                    onEditComment={onEditComment}
+                                    onDeleteComment={onDeleteComment}
+                                />}
+                            {/* reply */}
+                            {!isEditingComment &&
+                                <AddComment
+                                    isEditing={false}
+                                    toggleReplyingComment={toggleReplyingComment}
+                                    existingComment={comment}
+                                    onAddComment={onAddComment}
+                                    onEditComment={onEditComment}
+                                    onDeleteComment={onDeleteComment}
+                                />}
                         </div>
                     </div>
 
+                    {/* like  */}
+                    <div className='flex flex-col my-auto space-y-2'>
+                        <button className='bg-primary text-sm px-3 py-1'>Like</button>
+                        <span className="text-xs text-text">Likes: {comment.likes}</span>
+                    </div>
                 </div>
-
-
             </div>
 
             {/* Nested Replies */}
