@@ -30,7 +30,7 @@ export default function CommentItem({ comment, onAddComment, onEditComment, onDe
     const toggleReplyingComment = () => setIsReplyingComment(!isReplyingComment);
 
     return (
-        <div className="space-y-2 ml-4">
+        <div className="space-y-2 ml-1 md:ml-4">
             {/* Comment Display */}
             <div className="px-2 border border-secondary rounded bg-secondary text-text transition-all duration-200">
                 <div className='flex space-x-4 py-0 w-full'>
@@ -57,10 +57,21 @@ export default function CommentItem({ comment, onAddComment, onEditComment, onDe
                     </div>
 
                     {/* comment and reply/edit  */}
-                    <div className='w-full px-1 pt-1 space-y-4 mb-0  mt-2'>
-                        <div className='flex w-full justify-between'>
-                            <div className="my-auto">{comment.data}</div>
+                    <div className='w-full px-1 space-y-4 mb-0 relative'>
+                        <div className='flex'>
+
+                            <div className='flex w-full mt-4 pr-6 md:pr-12 justify-between'>
+                                <div className="my-auto">{comment.data}</div>
+                            </div>
+
+                            {/* like  */}
+                            <div className='flex flex-col absolute right-1 md:right-3 top-8 px-2 my-auto'>
+                                <button className=''><i className="fa-regular fa-heart font-bold text-xl"></i></button>
+                                <span className="text-xs text-text mx-auto">{comment.likes}</span>
+                            </div>
+
                         </div>
+
                         <div className='space-x-3 w-full flex'>
                             {/* edit comment */}
                             {!isReplyingComment && (user?.id === comment.created_by || user?.badge === 'Admin') &&
@@ -85,17 +96,13 @@ export default function CommentItem({ comment, onAddComment, onEditComment, onDe
                         </div>
                     </div>
 
-                    {/* like  */}
-                    <div className='flex flex-col my-auto space-y-2'>
-                        <button className='bg-primary text-sm px-3 py-1'>Like</button>
-                        <span className="text-xs text-text">Likes: {comment.likes}</span>
-                    </div>
+
                 </div>
             </div>
 
             {/* Nested Replies */}
             {!isCollapsed && comment.replies && comment.replies.length > 0 && (
-                <div className="ml-4 border-l space-y-2 border-secondary pl-4">
+                <div className="ml-2 md:ml-4 border-l space-y-2 border-secondary pl-4">
                     {comment.replies.map((reply) => (
                         <CommentItem
                             key={reply.comment_id}

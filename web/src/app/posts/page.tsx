@@ -22,20 +22,22 @@ type PostType = {
 }
 
 const posts = () => {
-    const router = useRouter();
     const [posts, setPosts] = useState<PostType[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
     const [filteredPosts, setFilteredPosts] = useState<PostType[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [locationFilter, setLocationFilter] = useState('');
 
     useEffect(() => {
         const fetchPosts = async () => {
+            setIsLoading(true);
             const res = await getPosts();
             if (res) {
                 const data = JSON.parse(res);
                 console.log(data);
                 setPosts(data);
             }
+            setIsLoading(false);
         };
         fetchPosts();
     }, []);
@@ -51,15 +53,15 @@ const posts = () => {
     }, [posts, searchTerm, locationFilter]);
 
     return (
-        <div className="max-w-4xl mx-auto p-6 bg-background text-text">
+        <div className="max-w-4xl mx-auto px-2 py-6 md:p-6 bg-background text-text">
             <h1 className="text-3xl font-bold mb-6 text-text">All Posts</h1>
-            <div className="mb-10 bg-background shadow-2xl lg:ml-7 px-4 py-5 rounded-lg">
+            <div className="mb-10 bg-background_accent shadow-md lg:ml-7 px-4 py-5 rounded-lg">
                 Welcome to the discussion space related to various activities and issues. Join the conversation and share your thoughts, ideas, and experiences.
                 <br />
                 To create a post, create a new activity!
             </div>
 
-            <div className="mb-6 flex space-x-4">
+            <div className="mb-6 md:flex space-y-1 flex-col md:flex-row items-center md:space-x-4">
                 <div className="font-semibold my-auto">Filters:</div>
                 <input
                     type="text"
@@ -83,7 +85,8 @@ const posts = () => {
 
             <div>
                 {filteredPosts.length === 0 ? (
-                    <p className="text-center text-gray-500">No posts found.</p>
+                    isLoading ? (<p className="text-center text-gray-500">Loading...</p>)
+                        : (<p className="text-center text-gray-500">No posts found.</p>)
                 ) : (
                     filteredPosts.map(post => (
                         <Link key={post.post_id} href={`/posts/${post.post_id}`}>

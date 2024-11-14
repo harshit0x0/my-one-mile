@@ -1,6 +1,12 @@
 import Header from "./components/header";
 import Link from "next/link";
 import { getUser } from "./actions";
+import Image from "next/image";
+import profileIcon from '@/src/public/profile-icon.png';
+import randomGuy1 from '@/src/public/randomGuy1.jpg';
+import randomGuy2 from '@/src/public/randomGuy2.png';
+import randomGuy3 from '@/src/public/randomGuy3.jpg';
+
 
 export default async function Home() {
   const user = await getUser();
@@ -11,14 +17,7 @@ export default async function Home() {
 
         {/* <!-- Hero Section --> */}
         <section className="bg-gradient-to-r from-[#F4F4F2] to-primary px-4 w-full py-24 text-center text-[#2D2D2D]">
-          <h1 className="text-3xl lg:text-5xl font-bold mb-4">Change Starts Here
-            <div className="my-5 relative h-32" >
-              <div className="mx-auto relative w-32 h-32">
-                <span className="absolute right-0 hover:border-primary hover:border-8 hover:shadow-inner hover:shadow-2xl z-1 w-32 h-32 rounded-full hover:scale-125 duration-300 ease-in-out"></span>
-                <div className="mx-auto py-11 md:py-9 my-auto py-auto p-0"><span className="my-auto">One</span></div>
-              </div>
-            </div>
-            Mile at a Time</h1>
+          <h1 className="text-3xl lg:text-5xl font-bold mb-4">Change Starts Here - One Mile at a Time</h1>
           <p className="lg:text-xl mb-8">Join a community-driven movement to make an impact in every neighborhood, every mile.</p>
           <div className="flex justify-center gap-4 transition">
             <a href="/signup" className="bg-primary-light text-white px-6 py-3 rounded-md shadow-xl transform hover:bg-background hover:text-text hover:scale-105 duration-300 ease-in-out">Get Started</a>
@@ -39,17 +38,17 @@ export default async function Home() {
                 <h3 className="text-2xl text-background font-semibold mb-4 transition-colors duration-300 ">
                   Community-Driven Activities
                 </h3>
-                <p className="text-gray-300">
+                <p className="text-background_accent">
                   Engage in local projects, from appreciation posts to reporting issues.
                 </p>
               </div>
 
               {/* Feature Card */}
-              <div className="p-8 bg-text md:rounded-lg shadow-2xl transition-transform transform hover:bg-secondary hover:rotate-1 hover:scale-110 duration-300 ease-in-out group">
+              <div className="p-8 bg-text md:rounded-lg shadow-2xl transition-transform transform  hover:rotate-1 hover:scale-110 duration-300 ease-in-out group">
                 <h3 className="text-2xl text-background font-semibold mb-4 transition-colors duration-300 ">
                   Location-Based Alerts
                 </h3>
-                <p className="text-gray-300">
+                <p className="text-background_accent">
                   Stay informed on activities and changes around you.
                 </p>
               </div>
@@ -59,7 +58,7 @@ export default async function Home() {
                 <h3 className="text-2xl text-background font-semibold mb-4 transition-colors duration-300 ">
                   Real-Time Interaction
                 </h3>
-                <p className="text-gray-300">
+                <p className="text-background_accent">
                   Post comments, share updates, and interact with others.
                 </p>
               </div>
@@ -73,18 +72,43 @@ export default async function Home() {
           <div className="container mx-auto text-center">
             <h2 className="text-2xl md:text-4xl text-text font-semibold mb-8">See what our community has to say</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <div className="p-6 bg-primary shadow-2xl rounded-md transform hover:scale-105 transition-transform duration-200">
-                <p>"My One Mile has helped me connect with my neighbors and make a real impact in my community!"</p>
+              <div className="p-6 mt-6 bg-primary shadow-2xl rounded-xl transform hover:scale-105 transition-transform duration-200">
+                <p className="italic">"My One Mile has helped me connect with my neighbors and make a real <b>impact</b> in my community!"</p>
+                <Image
+                  src={randomGuy1}
+                  height={60}
+                  width={60}
+                  alt="profile-picture"
+                  priority={true}
+                  className="rounded-full mx-auto mt-4"
+                />
                 <p className="mt-4 text-sm text-secondary-dark">- Alex, Community Member</p>
               </div>
-              <div className="p-6 bg-primary shadow-2xl rounded-md transform hover:scale-105 transition-transform duration-200">
-                <p>"Being able to share updates and alerts is invaluable. This app has truly brought us together."</p>
-                <p className="mt-4 text-sm text-secondary-dark">- Jamie, Volunteer</p>
+              <div className="p-6 bg-primary shadow-2xl rounded-xl transform hover:scale-105 transition-transform duration-200">
+                <p className="italic">"A powerful tool to create and support <b>meaningful</b> change, one small step at a time."</p>
+                <Image
+                  src={randomGuy3}
+                  height={60}
+                  width={60}
+                  alt="profile-picture"
+                  priority={true}
+                  className="rounded-full mx-auto mt-4"
+                />
+                <p className="mt-4 text-sm text-secondary-dark">- Harshit Pandey, Admin</p>
               </div>
-              <div className="p-6 bg-primary shadow-2xl rounded-md transform hover:scale-105 transition-transform duration-200">
-                <p>"A powerful tool to create and support meaningful change, one small step at a time."</p>
-                <p className="mt-4 text-sm text-secondary-dark">- Taylor, Resident</p>
+              <div className="p-6 mt-6 bg-primary shadow-2xl rounded-xl transform hover:scale-105 transition-transform duration-200">
+                <p className="italic">"Being able to share updates and alerts is <b>invaluable</b>. This app has truly brought us together."</p>
+                <Image
+                  src={randomGuy2}
+                  height={60}
+                  width={60}
+                  alt="profile-picture"
+                  priority={true}
+                  className="rounded-full mx-auto mt-4"
+                />
+                <p className="mt-4 text-sm text-secondary-dark">- Kartik Bhagat, Volunteer</p>
               </div>
+
             </div>
           </div>
         </section>

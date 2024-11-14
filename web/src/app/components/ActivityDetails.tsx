@@ -6,6 +6,8 @@ import { deleteActivity, getActivity } from '../actions';
 import Link from 'next/link';
 import { UserType } from '@/src/models/users';
 import Image from 'next/image'
+import profileIcon from '@/src/public/profile-icon.png'
+import moment from 'moment';
 
 interface Activity {
     activity_id: string;
@@ -80,28 +82,42 @@ export default function ActivityDetails({ id, user }: { id: string, user: UserTy
 
     return (
         <>
-            <div className="bg-secondary rounded-lg shadow-lg p-6 transition duration-300 ease-in-out hover:shadow-xl">
-                <div className='flex justify-between'>
-                    <div>
-                        <h1 className="text-3xl font-bold mb-4 text-primary">{activity.title}</h1>
-                        <div className="mb-4">
-                            <span className={`px-2 py-1 rounded text-sm text-white ${getStatusColor(activity.status_id)}`}>
-                                {getStatusString(activity.status_id)}
-                            </span>
-                            <span className="ml-2 text-sm px-2 py-1 text-text rounded bg-background">{getTypeString(activity.type_id)}</span>
-                        </div>
-                        <p className="mb-4 text-text">{activity.description}</p>
-                        <p className="mb-4 text-text"><strong>Location:</strong> {activity.location}</p>
-                    </div>
-                    <img
-                        src={activity.User.Image.url}
-                        alt="profile-picture"
-                        className="rounded-full h-20 w-20 max-h-20 "
-                    />
+            <div className="bg-secondary rounded-lg shadow-lg p-4 md:p-6 transition duration-300 ease-in-out hover:shadow-xl">
 
+                {/* title and image  */}
+                <div className='flex justify-between '>
+                    <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-4 text-secondary_accent">{activity.title}</h1>
+                    <div className="flex-shrink-0 flex-grow-0 text-center">
+                        <div className='relative w-10 h-10 mx-auto'>
+                            <Image
+                                // @ts-ignore
+                                src={activity?.User?.Image?.url || profileIcon}
+                                objectFit='cover'
+                                layout='fill'
+                                alt="profile-picture"
+                                className="rounded-full m-auto"
+                            />
+                        </div>
+                        {/* @ts-ignore */}
+                        <p className="text-xs mx-auto font-semibold">{activity.User.name}</p>
+                    </div>
                 </div>
+
+                {/* tags  */}
+                <div className="mb-4">
+                    <span className={`px-2 py-1 rounded text-sm text-white ${getStatusColor(activity.status_id)}`}>
+                        {getStatusString(activity.status_id)}
+                    </span>
+                    <span className="ml-2 text-sm px-2 py-1 text-text rounded bg-background">{getTypeString(activity.type_id)}</span>
+                </div>
+
+                {/* body  */}
+                <p className="mb-4 text-text bg-secondary px-2 py-5 md:px-5 rounded text-sm">{activity.description}</p>
+                <p className='font-bold text-sm my-auto md:text-md'><i className="fa-solid fa-location-dot"></i> {activity.location}</p>
+
                 {/* @ts-ignore */}
-                <p className="mb-4 text-sm text-text">Created by {activity.User.name} on {new Date(activity.createdAt).toLocaleDateString()}</p>
+                <p className="mx-2 mt-2 italic text-sm text-text"> Created {moment(activity.createdAt).fromNow()}</p>
+
                 {
                     (user?.id === activity.createdBy || user?.badge == "Admin") && (
                         <>
@@ -112,7 +128,7 @@ export default function ActivityDetails({ id, user }: { id: string, user: UserTy
                         </>
                     )
                 }
-            </div>
+            </div >
             <button
                 onClick={() => router.push('/activity')}
                 className="bg-primary text-white px-4 mt-4 py-2 rounded hover:bg-opacity-90 transition duration-200"

@@ -35,16 +35,16 @@ const AllActivitiesPage: React.FC = () => {
     }, [activities, searchTerm, locationFilter]);
 
     return (
-        <div className="max-w-4xl mx-auto py-6 bg-background text-text">
-            <h1 className="text-3xl font-bold mb-6 text-text">All Activities</h1>
+        <div className="max-w-4xl mx-auto px-1  md:px-4 py-6 bg-background text-text">
+            <h1 className="text-3xl font-bold mb-6 mx-2 md:mx-0 text-text">All Activities</h1>
 
-            <div className="mb-6 flex space-x-4">
+            <div className="mb-6 md:flex flex-col md:flex-row items-center md:space-x-4">
                 <input
                     type="text"
                     placeholder="Search activities..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="flex-1 p-2 border border-secondary rounded bg-background text-text
+                    className="flex-1 mx-2 my-1 p-2 border border-secondary rounded bg-background text-text
                                focus:ring-2 focus:ring-primary focus:border-transparent
                                transition duration-200 ease-in-out transform hover:scale-101"
                 />
@@ -53,7 +53,7 @@ const AllActivitiesPage: React.FC = () => {
                     placeholder="Filter by location..."
                     value={locationFilter}
                     onChange={(e) => setLocationFilter(e.target.value)}
-                    className="flex-1 p-2 border border-secondary rounded bg-background text-text
+                    className="flex-1 mx-2 my-1 p-2 border border-secondary rounded bg-background text-text
                                focus:ring-2 focus:ring-primary focus:border-transparent
                                transition duration-200 ease-in-out transform hover:scale-101"
                 />

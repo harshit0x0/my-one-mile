@@ -1,14 +1,16 @@
 "use client"
 import Image from "next/image";
 import profileIcon from "../../public/profile-icon.png";
-import { useState, FormEvent, ReactHTMLElement, ReactEventHandler } from "react";
+import { useState, FormEvent } from "react";
 import { UserType } from "@/src/models/users";
 import { useRouter } from "next/navigation";
-
+import Alert from "./Alert";
+import LoadingRing from "./LoadingRing";
 
 export default function ProfileForm({ user }: { user: UserType }) {
     const azurePrimaryKey = process.env.NEXT_PUBLIC_AZURE_PRIMARY_KEY;
     const [loading, setLoading] = useState(false);
+    const [alert, setAlert] = useState<{ type: string, text: string }>({ type: '', text: '' });
     const router = useRouter();
 
     type Location = { id: string, city: string, state: string, country: string, block: string }
@@ -27,21 +29,18 @@ export default function ProfileForm({ user }: { user: UserType }) {
         formData.append('id', user.id as string);
         formData.append('location', JSON.stringify(locationValue));
         setLoading(true);
-        // for (const [key, value] of formData.entries()) {
-        //     console.log(key, value);
-        // }
         const res = await fetch('/api/profile', {
             method: 'POST',
             body: formData as FormData
         })
         setLoading(false);
         if (res.ok) {
-            alert("Profile updated successfully");
+            setAlert({ type: 'success', text: "Profile updated successfully" });
             console.log("Profile updated successfully");
             router.refresh();
         } else {
             console.log("Failed to update profile");
-            alert("Failed to update profile");
+            setAlert({ type: 'error', text: "Failed to update profile, Please try again" });
         }
     }
 
@@ -49,14 +48,18 @@ export default function ProfileForm({ user }: { user: UserType }) {
     async function handleLocChange(e: any) {
         const currValue = e.target?.innerText;
         setLocationValue(currValue);
+        if (currValue.length < 3) return;
         console.log("requesting");
         const res = await fetch(`https://atlas.microsoft.com/search/address/json?
             api-version=1.0
+            &typeahead=true
             &query=${currValue}
             &subscription-key=${azurePrimaryKey}
+            &countrySet=IN
             &limit=4
             `);
         const data = await res.json();
+        console.log(data);
         const addressData = data.results?.filter(
             (entry: any) => entry.address?.municipality || entry.address?.municipalitySubdivision)
             .map((entry: any) => {
@@ -82,8 +85,8 @@ export default function ProfileForm({ user }: { user: UserType }) {
 
     return (
         <div className="mx-auto p-4 sm:p-6 md:p-8 bg-background w-full max-w-2xl rounded-lg shadow-md">
+            {alert.text !== '' && <Alert type={alert.type as any} message={alert.text} onClose={() => setAlert({ type: '', text: '' })} />}
             <h1 className="text-2xl sm:text-3xl text-center mb-6 font-bold text-text">Edit Profile</h1>
-            {loading && <p className="text-center text-3xl text-text">Loading...</p>}
             <form onSubmit={handleFormSubmit} className="p-6 rounded-lg shadow-sm">
                 {/* Profile photo */}
                 <div className="flex flex-col items-center mb-6">
@@ -117,6 +120,7 @@ export default function ProfileForm({ user }: { user: UserType }) {
                         placeholder={user?.dob?.toString() || "Select your date of birth"}
                         className="w-full px-3 py-2  rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                     />
+
                 </div>
 
                 {/* Location */}
@@ -128,7 +132,7 @@ export default function ProfileForm({ user }: { user: UserType }) {
                                 contentEditable={!isLocationSet}
                                 id="location"
                                 onInput={handleLocChange}
-                                className={`w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${isLocationSet ? "bg-gray-400 text-gray-500" : "bg-white"}`}
+                                className={`w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${isLocationSet ? "bg-background_accent" : "bg-white"}`}
                             ></div>
                             <button
                                 type="button"
@@ -163,7 +167,8 @@ export default function ProfileForm({ user }: { user: UserType }) {
                         : "bg-gray-400 cursor-not-allowed"
                         }`}
                 >
-                    Save Changes
+                    {!loading && <>Save Changes</>}
+                    {loading && <LoadingRing />}
                 </button>
             </form>
         </div>

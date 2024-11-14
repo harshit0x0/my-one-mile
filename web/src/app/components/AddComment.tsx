@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react';
+import { DiVim } from 'react-icons/di';
 
 // Mocking Comment type
 interface Comment {
@@ -61,14 +62,15 @@ const AddComment: React.FC<AddCommentProps> = ({ onAddComment, onEditComment, on
     }
 
     return (
-        <div className={'text-text space-y-4 ' + (isDialogOpen ? 'w-5/6' : '')}>
+        <div className={'text-text space-y-4 ' + (isDialogOpen ? 'w-full md:w-5/6' : '')}>
             <h2 className="font-semibold text-text">
                 <button className='font-xs underline' onClick={handleDialogToggle}>
-                    {isEditing ? 'Edit' : existingComment ? 'reply' : 'Add Comment'}
+                    {isEditing ? 'Edit' : existingComment ? 'reply' :
+                        (<div className='bg-secondary_accent px-2 py-2 rounded-lg text-background'>Add Comment</div>)}
                 </button>
             </h2>
             {<form onSubmit={handleSubmit} className={`space-y-4 ${isDialogOpen ? '' : 'hidden'} transition duration-300`}>
-                <div>
+                <div className=''>
                     <label htmlFor="commentText" className="block text-sm font-medium mb-1">Your Comment</label>
                     <textarea
                         id="commentText"
@@ -83,10 +85,10 @@ const AddComment: React.FC<AddCommentProps> = ({ onAddComment, onEditComment, on
                     ></textarea>
                 </div>
 
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between space-x-1 items-center">
                     <button
                         type="submit"
-                        className="bg-primary text-white px-4 py-2 rounded hover:bg-opacity-90 transition duration-200 mb-5"
+                        className="bg-primary text-white text-xs px-2 py-1 md:text-md md:px-4  md:py-2 rounded hover:bg-opacity-90 transition duration-200 mb-5"
                     >
                         {isEditing ? 'Update Comment' : 'Add Comment'}
                     </button>
@@ -95,7 +97,7 @@ const AddComment: React.FC<AddCommentProps> = ({ onAddComment, onEditComment, on
                         <button
                             type="button"
                             onClick={handleDelete}
-                            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-opacity-90 transition duration-200 mb-5"
+                            className="bg-red-600 text-white text-xs px-2 py-1 md:text-md md:px-4  md:py-2 rounded hover:bg-opacity-90 transition duration-200 mb-5"
                         >
                             Delete Comment
                         </button>

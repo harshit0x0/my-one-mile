@@ -25,22 +25,22 @@ const ActivityHomepage: React.FC = () => {
     return (
         <div className="max-w-5xl my-auto mx-auto min-h-screen py-6 px-2 md:px-6 bg-background text-text">
             <h1 className="text-3xl font-bold mb-4 text-text">Activities</h1>
-            <div className="mb-4 bg-background shadow-2xl lg:ml-7 px-4 py-5 rounded-lg">
+            <div className="mb-4 bg-background shadow-2xl lg:ml-7 px-2 md:px-4 py-5 rounded-lg">
                 Activities are issues that people take charge of solving. This involves reporting to concerned authorities, providing relevant updates etc.
                 These can also be fundraisers for an emergency.<br />
-                <div className="p-4 rounded-lg my-6 bg-gradient-to-r from-secondary_accent to-secondary py-6">
+                <div className="p-2 md:p-4 rounded-lg my-6 bg-gradient-to-r from-secondary_accent to-secondary py-6">
                     <p className='text-background font-semibold  pb-5'>
                         Create an activity and become a King of your mile!
                     </p>
-                    <div className="flex justify-between items-center">
-                        <Link href="/activity/all" className="text-text bg-primary px-4 py-2 rounded font-semibold">
+                    <div className="flex justify-between space-x-4 items-center">
+                        <Link href="/activity/all" className="text-text bg-primary text-sm md:text-md  px-2 py-1 md:px-4 md:py-2 rounded font-semibold">
                             Browse all activities and issues
                         </Link>
                         <Link
                             href="/activity/new"
-                            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-opacity-90 transition hover:transform hover:scale-105 duration-200"
+                            className="bg-green-500 font-semibold text-white text-sm md:text-md px-2 py-1 md:px-4 md:py-2 rounded hover:bg-opacity-90 transition hover:transform hover:scale-105 duration-200"
                         >
-                            CREATE ACTIVITY
+                            Create Activity
                         </Link>
                     </div>
                 </div>

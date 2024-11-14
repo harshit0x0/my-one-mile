@@ -6,27 +6,37 @@ import Link from "next/link"
 import { useRouter } from "next/navigation";
 import { revalidateGivenPath } from "../actions";
 import Header from "../components/header";
+import Alert from "../components/Alert";
+import LoadingRing from "../components/LoadingRing";
 
 export default function Login() {
     const router = useRouter();
     const [isLoading, setIsLoading] = React.useState(false);
+    const [alert, setAlert] = React.useState<{ type: string, text: string }>({ type: '', text: '' });
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setIsLoading(true);
         const formData = new FormData(e.currentTarget);
-        const res = await fetch('/api/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(Object.fromEntries(formData)),
-        });
-        setIsLoading(false);
-
-        if (!res.ok) { alert(await res.text()); }
+        let res = null;
+        try {
+            res = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(Object.fromEntries(formData)),
+            });
+            setIsLoading(false);
+        } catch (e) {
+            console.log(e);
+        }
+        // @ts-ignore
+        if (!res.ok) { setAlert({ text: await res.text(), type: 'error' }) }
         else {
-            alert("successfully logged in");
+            const details = await res?.json();
+            localStorage.setItem("user", JSON.stringify(details));
+            setAlert({ type: 'success', text: "Successfully logged in" });
             revalidateGivenPath('/');
             router.push('/');
         }
@@ -36,7 +46,7 @@ export default function Login() {
         <div className="bg-background mx-auto">
             <Header user={null} />
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-background">
-                {isLoading && <div className="text-center text-3xl text-text">Loading...</div>}
+                {alert.text !== '' && <Alert type={alert.type as any} message={alert.text} onClose={() => setAlert({ type: '', text: '' })} />}
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <Image src={logo} alt="my-one-mile-logo" className="mx-auto h-12 w-auto" />
                     <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-text">
@@ -90,7 +100,8 @@ export default function Login() {
                                 type="submit"
                                 className="flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm bg-secondary hover:bg-secondary_accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                             >
-                                Sign in
+                                {!isLoading && <>Sign in</>}
+                                {isLoading && <LoadingRing />}
                             </button>
                         </div>
                     </form>

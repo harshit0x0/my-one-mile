@@ -20,6 +20,9 @@ const config: Config = {
         background: 'var(--color-background)',
         text: 'var(--color-text)',
         secondary_accent: 'var(--color-secondary-accent)',
+        primary_accent: 'var(--color-primary-accent)',
+        background_accent: 'var(--color-background-accent)',
+        text_accent: 'var(--color-text-accent)'
       },
       scale: {
         175: '1.75'

@@ -4,15 +4,26 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { UserType } from "@/src/models/users";
-import { logout } from "../actions";
+import { getImageURL, logout } from "../actions";
 import { toggleTheme } from "../actions";
+import Image from "next/image";
+import profileIcon from "../../public/profile-icon.png";
 
 export default function AuthButtons({ user }: { user: UserType | null }) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false); // Menu toggle state
-
+    const [isSmallMenuOpen, setIsSmallMenuOpen] = useState(false);
+    const [imgUrl, setImgUrl] = useState<string | null>(null);
     useEffect(() => {
+        async function setImg() {
+            if (!user) { return; }
+            const imgUrl = await getImageURL(user.image_id as string);
+            if (!imgUrl) { return; }
+            setImgUrl(imgUrl);
+        }
+        setImg();
         setIsLoggedIn(!!user);
+
     }, [user]);
 
     const router = useRouter();
@@ -36,7 +47,7 @@ export default function AuthButtons({ user }: { user: UserType | null }) {
         <div className="relative">
             {/* Hamburger Icon for Small Screens (Appears only on small screens <768px) */}
             <button
-                className="block md:hidden text-text px-4 py-3"
+                className="block md:hidden text-text py-3"
                 onClick={toggleMenu}
             >
                 {/* Icon (Hamburger) */}
@@ -46,7 +57,7 @@ export default function AuthButtons({ user }: { user: UserType | null }) {
             </button>
 
             {/* Collapsible Menu for Small Screens */}
-            <div className={`absolute bg-background md:bg-transparent right-1 top-16 shadow-lg rounded-lg py-2 ${isMenuOpen ? 'block' : 'hidden'} md:block md:static md:shadow-none`}>
+            <div className={`absolute bg-background md:bg-transparent right-1 px-3 md:px-0 top-16 shadow-lg rounded-lg py-2 ${isMenuOpen ? 'block' : 'hidden'} md:block md:static md:shadow-none`}>
                 {!isLoggedIn ? (
                     <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
                         <Link className="text-text text-center hover:underline rounded w-32 px-8 md:w-auto md:px-2 py-3 md:w-18" href="/posts">
@@ -77,16 +88,35 @@ export default function AuthButtons({ user }: { user: UserType | null }) {
                             <button className="text-text text-center hover:underline rounded w-32 px-8 md:w-auto md:px-2 py-3 md:w-18" onClick={changeTheme}>
                                 Theme
                             </button>
-                            <Link className="text-text text-center hover:underline rounded w-32 px-8 md:w-auto md:px-2 py-3 md:w-18" href="/profile">
-                                {user.name ? user.name : user.email}
-                            </Link>
-                            <Link
-                                className="text-text text-center hover:underline rounded w-32 px-8 md:w-auto md:px-2 py-3 md:w-18"
-                                href="#"
-                                onClick={handleLogout}
-                            >
-                                Logout
-                            </Link>
+                            <div className="relative">
+                                <Image
+                                    src={imgUrl ?? profileIcon}
+                                    style={{ objectFit: "cover", width: "30px", height: "30px" }}
+                                    width={30}
+                                    height={30}
+                                    alt="profile-picture"
+                                    priority={true}
+                                    className="mx-auto mt-2 my-auto cursor-pointer rounded-full"
+                                    onClick={() => setIsSmallMenuOpen(!isSmallMenuOpen)}
+                                />
+                                {isSmallMenuOpen && (
+                                    <div className="absolute bg-background flex flex-col w-40 right-1 px-3 md:px-0 top-16 shadow-lg rounded-lg py-2">
+                                        <Link
+                                            className="text-text text-center hover:underline rounded w-32 px-8 md:w-auto md:px-2 py-3 md:w-18"
+                                            href="/profile/"
+                                        >
+                                            Edit Profile
+                                        </Link>
+                                        <Link
+                                            className="text-text text-center hover:underline rounded w-32 px-8 md:w-auto md:px-2 py-3 md:w-18"
+                                            href="#"
+                                            onClick={handleLogout}
+                                        >
+                                            Logout
+                                        </Link>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     )
                 )}

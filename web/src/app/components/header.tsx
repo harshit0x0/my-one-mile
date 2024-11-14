@@ -19,7 +19,7 @@ export default function Header({ user }: { user: UserType | null }) {
                             width={48}
                             height={48}
                         />
-                        <span className="text-xl font-bold text-white pt-2">My One Mile</span>
+                        <span className="text-xl font-bold text-white font-musemoderno pt-2">My One Mile</span>
                     </Link>
 
                     {/* Spacer to push AuthButtons to the right */}

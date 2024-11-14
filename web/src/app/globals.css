@@ -9,59 +9,155 @@
 @layer base {
     :root {
         --color-primary: #f8aa67;
-        /* Muted Warm Amber */
+        --color-primary-accent: #ff8011;
         --color-secondary: #B57F5F;
-        /* Warm Taupe */
         --color-secondary-accent: #A37A63;
-        /* Muted Sienna */
         --color-background: #F4F4F2;
-        /* Soft Off-White */
+        --color-background-accent: #9f9f9f;
         --color-text: #2D2D2D;
-        /* Dark Charcoal */
-
+        --color-text-accent: #3d3d3d;
         font-family: "Open Sans", sans-serif;
     }
-
 }
 
 .theme-light {
     --color-primary: #ff9437;
-    --color-secondary: #634eda;
-    --color-secondary-accent: #452ec7;
+    --color-primary-accent: #ff8011;
+    --color-secondary: #003e7d92;
+    --color-secondary-accent: #00366dd0;
     --color-background: #F4F4F2;
+    --color-background-accent: #d3d3d3;
     --color-text: #1c1c1c;
+    --color-text-accent: #313131;
 }
 
 .theme-dark {
     --color-primary: #ff8419;
-    /* Soft Bronze */
     --color-secondary: #5e3fbd;
-    /* Rich Clay */
-    --color-secondary-accent: #7b57e7;
-    /* Muted Russet */
+    --color-secondary-accent: #9b9dff;
     --color-background: #313131;
-    /* Charcoal Black */
     --color-text: #eaeaea;
-    /* Soft Light Gray */
 }
 
-/* Additional Standard Colors */
-.success {
-    --color-success: #6A9B7B;
-    /* Desaturated Green */
+.font-musemoderno {
+    font-family: "MuseoModerno", sans-serif;
+    font-weight: 100;
 }
 
-.warning {
-    --color-warning: #D4A14E;
-    /* Warm Honey */
+.lds-ring,
+.lds-ring div {
+    box-sizing: border-box;
 }
 
-.error {
-    --color-error: #A8575A;
-    /* Muted Crimson */
+.lds-ring {
+    display: inline-block;
+    position: relative;
+    width: 20px;
+    height: 20px;
+}
+
+.lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    margin: 4px;
+    border: 4px solid currentColor;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: currentColor transparent transparent transparent;
+}
+
+.lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+}
+
+.lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+}
+
+.lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+}
+
+@keyframes lds-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.alert {
+    position: relative;
+    top: 10;
+    left: 0;
+    width: auto;
+    height: auto;
+    padding: 10px;
+    margin: 10px;
+    line-height: 1.8;
+    border-radius: 5px;
+    cursor: hand;
+    cursor: pointer;
+    font-family: sans-serif;
+    font-weight: 400;
+}
+
+.alertCheckbox {
+    display: none;
+}
+
+:checked+.alert {
+    display: none;
+}
+
+.alertText {
+    display: table;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 16px;
+}
+
+.alertClose {
+    float: right;
+    padding-top: 5px;
+    font-size: 10px;
+}
+
+.clear {
+    clear: both;
 }
 
 .info {
-    --color-info: #5C8DAB;
-    /* Dusty Blue */
+    background-color: #EEE;
+    border: 1px solid #DDD;
+    color: #999;
+}
+
+.success {
+    background-color: #EFE;
+    border: 1px solid #DED;
+    color: #9A9;
+}
+
+.notice {
+    background-color: #EFF;
+    border: 1px solid #DEE;
+    color: #9AA;
+}
+
+.warning {
+    background-color: #FDF7DF;
+    border: 1px solid #FEEC6F;
+    color: #C9971C;
+}
+
+.error {
+    background-color: #FEE;
+    border: 1px solid #EDD;
+    color: #A66;
 }

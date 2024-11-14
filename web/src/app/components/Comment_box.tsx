@@ -6,6 +6,7 @@ import AddComment from './AddComment';
 import CommentItem from './CommentItem';
 import { useRouter, usePathname } from 'next/navigation';
 import { UserType } from '@/src/models/users';
+import Alert from '../components/Alert';
 
 interface Comment {
     comment_id: string;
@@ -23,6 +24,7 @@ const CommentBox = ({ post_id, refreshKey, user }: { post_id: string, refreshKey
     const [comments, setComments] = useState<Comment[]>([]);
     const pathname = usePathname();
     const router = useRouter();
+    const [alert, setAlert] = useState<{ type: string, text: string }>({ type: '', text: '' });
 
     useEffect(() => {
         async function fetchComments() {
@@ -44,7 +46,7 @@ const CommentBox = ({ post_id, refreshKey, user }: { post_id: string, refreshKey
     async function onAddComment(data: string, reply_id: string | null) {
         //create the comment and save to the database
         if (!user) {
-            alert("You must be logged in to comment");
+            setAlert({ type: "warning", text: "You must be logged in to comment" });
             router.push('/login');
             return;
         }
@@ -57,17 +59,17 @@ const CommentBox = ({ post_id, refreshKey, user }: { post_id: string, refreshKey
             body: JSON.stringify({ data, reply_id, post_id }),
         })
         if (!res.ok) {
-            alert("Failed to add comment");
+            setAlert({ type: "warning", text: "Failed to add comment" });
             console.log(await res.text());
             return;
         }
         const response = await res.json();
         console.log(response);
         if (!response) {
-            alert("Failed to add comment");
+            setAlert({ type: "warning", text: "Failed to add comment" });
         }
         else {
-            alert("added comment");
+            setAlert({ type: "success", text: "Comment added" });
             console.log("path: ", pathname);
             await revalidateGivenPath('/posts/[id]');
             router.push('/posts/' + post_id + '?refresh=' + Date.now());
@@ -80,9 +82,11 @@ const CommentBox = ({ post_id, refreshKey, user }: { post_id: string, refreshKey
         console.log("deleting comment: ", comment_id);
         const response = await deleteComment(comment_id);
         if (!response) {
-            alert("Failed to delete comment");
+            setAlert({ type: "warning", text: "Failed to delete comment" });
+            // alert("Failed to delete comment");
         } else {
-            alert("deleted Comment");
+            // alert("deleted Comment");
+            setAlert({ type: "success", text: "Comment deleted" });
             setComments((prevComments) => prevComments.filter((comment) => comment.comment_id !== comment_id));
         }
     }
@@ -92,9 +96,11 @@ const CommentBox = ({ post_id, refreshKey, user }: { post_id: string, refreshKey
         console.log("updating comment: " + text + " " + comment_id);
         const response = await updateComment(text, comment_id);
         if (!response) {
-            alert("Failed to edit comment");
+            setAlert({ type: "warning", text: "Failed to edit comment" });
+            // alert("Failed to edit comment");
         } else {
-            alert("updated comment");
+            // alert("updated comment");
+            setAlert({ type: "success", text: "Comment updated" });
             console.log(pathname);
         }
 
@@ -102,6 +108,7 @@ const CommentBox = ({ post_id, refreshKey, user }: { post_id: string, refreshKey
 
     return (
         <div className="space-y-4">
+            {alert.text !== '' && <Alert type={alert.type as any} message={alert.text} onClose={() => setAlert({ type: '', text: '' })} />}
             <h2 className="text-lg font-semibold text-text">Comments</h2>
             <div className='px-3 py-1 text-white  rounded'>
                 <AddComment

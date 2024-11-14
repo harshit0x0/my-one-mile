@@ -21,7 +21,10 @@ export async function POST(request: Request) {
         const user = await User.create({ id, email, password: hashedPassword, role_id: userRole[0].role_id });
         return new Response(JSON.stringify(user), { status: 201 });
     } catch (e) {
-        console.log(e);
+        // @ts-ignore 
+        if (e.name === 'SequelizeUniqueConstraintError') return new Response('This email is already registered', { status: 400 });
+        // @ts-ignore 
+        if (e.name === 'SequelizeConnectionError') return new Response('Connection error', { status: 500 });
         return new Response(`Internal server error:${e}`, { status: 500 });
     }
 }

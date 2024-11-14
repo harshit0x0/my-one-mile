@@ -6,42 +6,53 @@ import Link from "next/link"
 import { FormEvent } from "react"
 import { useRouter } from "next/navigation"
 import Header from "../components/header"
+import LoadingRing from "../components/LoadingRing"
+import Alert from "../components/Alert"
 
 export default function Signup() {
     const router = useRouter();
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
+    const [alert, setAlert] = React.useState<{ type: string, text: string }>({ type: '', text: '' });
 
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setIsLoading(true);
         const formData = new FormData(e.currentTarget);
-        const res = await fetch('/api/signup', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(Object.fromEntries(formData))
-        });
+        let res = null;
+        try {
+            res = await fetch('/api/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(Object.fromEntries(formData))
+            });
+        } catch (e) {
+            setAlert({ type: 'error', text: 'Failed to create user' });
+            console.log(e);
+            setIsLoading(false);
+            return;
+        }
         setIsLoading(false);
         if (res.ok) {
-            alert("successfully created user");
+            setAlert({ type: 'success', text: 'User created successfully' });
             const user = await res.json();
             console.log(user);
             localStorage.setItem("user", JSON.stringify(user));
             router.push('/');
         } else {
             router.push('/signup');
-            alert("failed to create user");
-            alert(await res.text());
+            setAlert({ type: 'error', text: await res.text() });
         }
 
     }
+
 
     return (
         <div className="bg-background mx-auto">
             <Header user={null} />
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-background">
-                {isLoading && <div className="text-center text-3xl text-text">Loading ... </div>}
+                {alert.text !== '' && <Alert type={alert.type as any} message={alert.text} onClose={() => setAlert({ type: '', text: '' })} />}
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <Image src={logo} alt="my-one-mile-logo" className="mx-auto h-12 w-auto" />
                     <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-text">
@@ -110,7 +121,8 @@ export default function Signup() {
                                 type="submit"
                                 className="flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-text shadow-sm bg-secondary hover:bg-secondary_accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                             >
-                                Sign up
+                                {!isLoading && <>Sign up</>}
+                                {isLoading && <LoadingRing />}
                             </button>
                         </div>
                     </form>
@@ -121,6 +133,7 @@ export default function Signup() {
                             Login
                         </Link>
                     </p>
+
                 </div>
 
                 <Link href="/" className="text-center mt-8 font-semibold leading-6 text-secondary hover:text-secondary_accent">
