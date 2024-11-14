@@ -136,10 +136,9 @@ export default function PostDetails({ id, user }: { id: string, user: UserType |
                                     <Image
                                         // @ts-ignore
                                         src={post?.User?.Image?.url || profileIcon}
-                                        objectFit='cover'
-                                        layout='fill'
+                                        fill
                                         alt="profile-picture"
-                                        className="rounded-full m-auto"
+                                        className="rounded-full m-auto cover"
                                     />
                                     {/* @ts-ignore */}
                                     <p className="text-xs font-semibold mt-8">{post.User.name}</p>

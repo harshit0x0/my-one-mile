@@ -92,10 +92,9 @@ export default function ActivityDetails({ id, user }: { id: string, user: UserTy
                             <Image
                                 // @ts-ignore
                                 src={activity?.User?.Image?.url || profileIcon}
-                                objectFit='cover'
-                                layout='fill'
+                                fill
                                 alt="profile-picture"
-                                className="rounded-full m-auto"
+                                className="rounded-full m-auto cover"
                             />
                         </div>
                         {/* @ts-ignore */}

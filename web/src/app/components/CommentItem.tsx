@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import AddComment from './AddComment';
 import { UserType } from '@/src/models/users';
-import profileIcon from '@/src/public/profile-icon.png';
+import profileIcon from '../../public/profile-icon.png';
+import Image from 'next/image';
 
 interface Comment {
     comment_id: string;
@@ -40,12 +41,15 @@ export default function CommentItem({ comment, onAddComment, onEditComment, onDe
                     {/* profile-pic and collapse button */}
                     <div className='text-center my-2 pr-2 border-r-2 border-secondary'>
                         <div className="max-w-20 text-center">
-                            <img
-                                // @ts-ignore
-                                src={comment?.User?.Image?.url || profileIcon}
-                                alt="profile-picture"
-                                className="rounded-full mx-auto h-8 w-8 max-h-8 "
-                            />
+                            <div className='relative w-8 h-8 mx-auto'>
+                                <Image
+                                    // @ts-ignore
+                                    src={comment?.User?.Image?.url || profileIcon}
+                                    fill
+                                    alt="profile-picture"
+                                    className="rounded-full cover mx-auto max-h-8 "
+                                />
+                            </div>
                             {/* @ts-ignore */}
                             <p className="text-xs text-background font-semibold">{comment.User.name}</p>
                         </div>
