@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import AddComment from './AddComment';
 import { UserType } from '@/src/models/users';
+import profileIcon from '@/src/public/profile-icon.png';
+
 interface Comment {
     comment_id: string;
     data: string;
@@ -40,7 +42,7 @@ export default function CommentItem({ comment, onAddComment, onEditComment, onDe
                         <div className="max-w-20 text-center">
                             <img
                                 // @ts-ignore
-                                src={comment.User.Image.url}
+                                src={comment?.User?.Image?.url || profileIcon}
                                 alt="profile-picture"
                                 className="rounded-full mx-auto h-8 w-8 max-h-8 "
                             />
